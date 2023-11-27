@@ -1,3 +1,5 @@
 <div>
-    {{-- The whole world belongs to you. --}}
+    @error('invalidCredentials')
+        <span>{{ $message }}</span>
+    @enderror
 </div>
