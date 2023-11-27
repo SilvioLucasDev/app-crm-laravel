@@ -5,9 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use App\Notifications\WelcomeNotification;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\{Builder, Model};
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -35,7 +33,7 @@ class Register extends Component
         $this->validate();
 
         /**
-         *  @var Authenticatable|Builder|Model $user
+         *  @var User $user
          */
         $user = User::query()->create([
             'name'     => $this->name,

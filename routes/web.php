@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\{Auth, Route};
 
 Route::get('/login', Login::class)->name('auth.login');
 Route::get('/register', Register::class)->name('auth.register');
-Route::get('/logout', fn () => Auth::logout());
+Route::get('/logout', fn () => Auth::logout())->name('auth.logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', Welcome::class)->name('dashboard');
