@@ -9,10 +9,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen font-sans antialiased">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        {{ $slot }}
-    </div>
+<body class="min-h-screen font-sans antialiased flex items-center bg-gray-100 dark:bg-gray-900">
+    {{ $slot }}
 </body>
 
 </html>
