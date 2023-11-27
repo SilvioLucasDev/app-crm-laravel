@@ -4,7 +4,9 @@ namespace App\Livewire\Auth;
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -13,7 +15,7 @@ class Register extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $name = null;
 
-    #[Rule(['required', 'email', 'max:255', 'confirmed'])]
+    #[Rule(['required', 'email', 'max:255', 'confirmed', 'unique:users,email'])]
     public ?string $email = null;
 
     public ?string $email_confirmation = null;
@@ -23,13 +25,17 @@ class Register extends Component
 
     public function render(): View
     {
-        return view('livewire.auth.register');
+        return view('livewire.auth.register')
+            ->layout('components.layouts.guest');
     }
 
     public function submit(): void
     {
         $this->validate();
 
+        /**
+         *  @var Authenticatable|Builder|Model $user
+         */
         $user = User::query()->create([
             'name'     => $this->name,
             'email'    => $this->email,
