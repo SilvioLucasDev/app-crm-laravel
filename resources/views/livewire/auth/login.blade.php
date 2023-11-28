@@ -15,10 +15,16 @@
     <x-form wire:submit="tryToLogin">
         <x-input label="Email" wire:model="email" />
         <x-input label="Password" wire:model="password" type="password" />
+        <div class="w-full text-right">
+            <a wire:navigate href="{{ route('auth.password.recovery') }}" class="link link-primary text-xs">
+                Forgot your password?
+            </a>
+        </div>
         <x-slot:actions>
             <div class="w-full flex items-center justify-between">
-                <a wire:navigate href="{{ route('auth.register') }}" class="link link-primary">I want to create an
-                    account</a>
+                <a wire:navigate href="{{ route('auth.register') }}" class="link link-primary text-sm">
+                    I want to create an account
+                </a>
                 <div>
                     <x-button label="Login" class="btn-primary" type="submit" spinner="submit" />
                 </div>
