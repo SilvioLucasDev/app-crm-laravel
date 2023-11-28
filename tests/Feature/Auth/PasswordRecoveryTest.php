@@ -2,11 +2,11 @@
 
 use App\Livewire\Auth\Password\Recovery;
 use App\Models\User;
-use App\Notifications\PasswordRecoveryNotification;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
-use function Pest\Laravel\get;
+use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, get};
 
 it('needs to have a route to password recovery', function () {
     get(route('auth.password.recovery'))
@@ -23,7 +23,7 @@ it('should be able to request for a password recovery sending notification to th
         ->call('startPasswordRecovery')
         ->assertSee('You will receive an email with the password recovery link.');
 
-    Notification::assertSentTo($user, PasswordRecoveryNotification::class);
+    Notification::assertSentTo($user, ResetPassword::class);
 });
 
 it('validation rules', function ($value, $rule) {
@@ -35,3 +35,14 @@ it('validation rules', function ($value, $rule) {
     'required' => ['value' => '', 'rule' => 'required'],
     'email'    => ['value' => 'wrong-email', 'rule' => 'email'],
 ]);
+
+it('needs to create a token when requesting for a password recovery', function () {
+    $user = User::factory()->create();
+
+    Livewire::test(Recovery::class)
+        ->set('email', $user->email)
+        ->call('startPasswordRecovery');
+
+    assertDatabaseCount('password_reset_tokens', 1);
+    assertDatabaseHas('password_reset_tokens', ['email' => $user->email]);
+});
