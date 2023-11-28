@@ -7,7 +7,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\{DB, Hash, Password};
 use Illuminate\Support\Str;
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;
 
 class Reset extends Component
@@ -23,6 +23,12 @@ class Reset extends Component
     public ?string $password = null;
 
     public ?string $password_confirmation = null;
+
+    #[Computed]
+    public function obfuscateEmail(): string
+    {
+        return obfuscate_email($this->email);
+    }
 
     public function mount(?string $token = null, ?string $email = null): void
     {

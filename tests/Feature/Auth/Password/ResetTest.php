@@ -61,7 +61,6 @@ it('test if is possible to reset the password with the given token', function ()
 });
 
 it('validation rules', function ($field, $value, $rule) {
-
     Notification::fake();
     $user = User::factory()->create();
 
@@ -91,3 +90,34 @@ it('validation rules', function ($field, $value, $rule) {
     'password::required'  => ['field' => 'password', 'value' => '', 'rule' => 'required'],
     'password::confirmed' => ['field' => 'password', 'value' => 'any-password', 'rule' => 'confirmed'],
 ]);
+
+it('needs to show an obfuscate email to the user', function () {
+    $email          = 'any_email@email.com';
+    $obfuscateEmail = obfuscate_email($email);
+
+    expect($obfuscateEmail)
+        ->toBe('any******@******com');
+
+    // ---
+
+    Notification::fake();
+    $user = User::factory()->create();
+
+    Livewire::test(Password\Recovery::class)
+        ->set('email', $user->email)
+        ->call('startPasswordRecovery');
+
+    Notification::assertSentTo(
+        $user,
+        ResetPassword::class,
+        function (ResetPassword $notification) use ($user) {
+            Livewire::test(Password\Reset::class, [
+                'token' => $notification->token,
+                'email' => $user->email,
+            ])
+            ->set('obfuscateEmail', obfuscate_email($user->email));
+
+            return true;
+        }
+    );
+});
