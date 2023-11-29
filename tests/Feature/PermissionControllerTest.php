@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\{Permission, User};
+use App\Models\{Can, Permission, User};
 use Database\Seeders\{PermissionSeeder, UserSeeder};
 use Illuminate\Support\Facades\{Cache, DB};
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, get, seed};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, seed};
 
 it('should be able to give an user a permission to do something', function () {
     /** @var User $user */
@@ -13,18 +13,18 @@ it('should be able to give an user a permission to do something', function () {
         'password' => 'password',
     ]);
 
-    $user->givePermissionTo('be an admin');
+    $user->givePermissionTo(Can::BE_AN_ADMIN);
 
     expect($user)
-        ->hasPermissionTo('be an admin')->toBeTrue();
+        ->hasPermissionTo(Can::BE_AN_ADMIN)->toBeTrue();
 
     assertDatabaseHas('permissions', [
-        'key' => 'be an admin',
+        'key' => Can::BE_AN_ADMIN,
     ]);
 
     assertDatabaseHas('permission_user', [
         'user_id'       => $user->id,
-        'permission_id' => Permission::where('key', '=', 'be an admin')->first()->id,
+        'permission_id' => Permission::where('key', '=', Can::BE_AN_ADMIN)->first()->id,
     ]);
 });
 
@@ -32,7 +32,7 @@ it('permission has to have a seeder', function () {
     seed(PermissionSeeder::class);
 
     assertDatabaseHas('permissions', [
-        'key' => 'be an admin',
+        'key' => Can::BE_AN_ADMIN,
     ]);
 });
 
@@ -40,12 +40,12 @@ it('seed with an admin user', function () {
     seed([PermissionSeeder::class, UserSeeder::class]);
 
     assertDatabaseHas('permissions', [
-        'key' => 'be an admin',
+        'key' => Can::BE_AN_ADMIN,
     ]);
 
     assertDatabaseHas('permission_user', [
         'user_id'       => User::first()?->id,
-        'permission_id' => Permission::where('key', '=', 'be an admin')->first()?->id,
+        'permission_id' => Permission::where('key', '=', Can::BE_AN_ADMIN)->first()?->id,
     ]);
 });
 
@@ -60,7 +60,7 @@ it('should block the access to admin page if the user does not have the permissi
 it("let's make sure that we are using cache to store user permissions", function () {
     $user = User::factory()->create();
 
-    $user->givePermissionTo('be an admin');
+    $user->givePermissionTo(Can::BE_AN_ADMIN);
 
     $cacheKey = "user::{$user->id}::permissions";
 
@@ -71,12 +71,12 @@ it("let's make sure that we are using cache to store user permissions", function
 it("let's make sure that we are using cache the retrieve/check when the user has the given permission", function () {
     $user = User::factory()->create();
 
-    $user->givePermissionTo('be an admin');
+    $user->givePermissionTo(Can::BE_AN_ADMIN);
 
     // Deve garantir que não seja realizado nenhuma consulta no banco a partir desse ponto
     DB::listen(fn ($query) => throw new Exception('We got a hit'));
 
-    $user->hasPermissionTo('be an admin');
+    $user->hasPermissionTo(Can::BE_AN_ADMIN);
 
     expect(true)->toBeTrue();
 });
