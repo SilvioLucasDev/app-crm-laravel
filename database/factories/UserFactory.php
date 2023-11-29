@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\Can;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -37,5 +39,17 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     */
+    public function withPermission(Can|string $key): static
+    {
+        $key = $key instanceof Can ? $key->value : $key;
+
+        return $this->afterCreating(function (User $user) use ($key) {
+            $user->givePermissionTo($key);
+        });
     }
 }
