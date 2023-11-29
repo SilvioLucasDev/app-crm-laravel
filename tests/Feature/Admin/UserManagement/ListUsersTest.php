@@ -10,7 +10,6 @@ use function Pest\Laravel\{actingAs, get};
 it('should be able to access the route admin/users', function () {
     /** @var User $user */
     $user = User::factory()->admin()->create();
-
     actingAs($user);
 
     get(route('admin.users'))
@@ -20,7 +19,6 @@ it('should be able to access the route admin/users', function () {
 it('make sure that the route is protected by the permission BE_AN_ADMIN', function () {
     /** @var User $user */
     $user = User::factory()->create();
-
     actingAs($user);
 
     get(route('admin.users'))
@@ -29,7 +27,10 @@ it('make sure that the route is protected by the permission BE_AN_ADMIN', functi
 
 it("let's create a livewire component to list as users in the page", function () {
     /** @var User $user */
-    $users = User::factory(10)->create();
+    $user = User::factory()->admin()->create();
+    actingAs($user);
+
+    $users = User::factory(9)->create();
 
     $livewire = Livewire::test(Admin\Users\Index::class);
 
@@ -44,4 +45,18 @@ it("let's create a livewire component to list as users in the page", function ()
     foreach ($users as $user) {
         $livewire->assertSee($user->name);
     }
+});
+
+it('check the table format', function () {
+    /** @var User $user */
+    $user = User::factory()->admin()->create();
+    actingAs($user);
+
+    Livewire::test(Admin\Users\Index::class)
+        ->assertSet('headers', [
+            ['key' => 'id', 'label' => '#'],
+            ['key' => 'name', 'label' => 'Name'],
+            ['key' => 'email', 'label' => 'Email'],
+            ['key' => 'permissions', 'label' => 'Permissions'],
+        ]);
 });
