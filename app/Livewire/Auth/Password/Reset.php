@@ -36,7 +36,7 @@ class Reset extends Component
         $this->email = request('email', $email);
 
         if(!$this->tokenIsValid()) {
-            session()->flash('status', trans('auth.token'));
+            session()->flash('status', trans('passwords.token'));
             $this->redirectRoute('auth.login');
         }
     }
@@ -60,8 +60,14 @@ class Reset extends Component
                 event(new PasswordReset($user));
             }
         );
+
         session()->flash('status', trans($status));
-        $this->redirectRoute('dashboard');
+
+        if($status !== Password::PASSWORD_RESET) {
+            return;
+        }
+
+        $this->redirectRoute('auth.login');
     }
 
     private function tokenIsValid(): bool

@@ -1,5 +1,4 @@
 <x-card title="Login" shadow class="mx-auto w-[500px]">
-
     @if ($message = session()->get('status'))
         <x-alert icon="o-exclamation-triangle" class="alert-error alert mb-4">
             <span>{{ $message }}</span>

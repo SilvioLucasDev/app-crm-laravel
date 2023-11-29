@@ -50,7 +50,7 @@ it('test if is possible to reset the password with the given token', function ()
                 ->set('password_confirmation', 'new-password')
                 ->call('updatePassword')
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('auth.login'));
 
             $user->refresh();
             assertTrue(Hash::check('new-password', $user->password));
