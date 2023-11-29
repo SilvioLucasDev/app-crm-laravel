@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         User::factory()
             ->withPermission(Can::BE_AN_ADMIN)
             ->create([
-                'name'  => 'Admin di CRM',
+                'name'  => 'Admin do CRM',
                 'email' => 'admin@crm.com',
             ]);
     }
