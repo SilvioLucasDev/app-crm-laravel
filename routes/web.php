@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Auth\{Login, Register};
+use App\Livewire\Auth\{Login, Password, Register};
 use App\Livewire\Welcome;
 use Illuminate\Support\Facades\{Auth, Route};
 
@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\{Auth, Route};
 Route::get('/login', Login::class)->name('auth.login');
 Route::get('/register', Register::class)->name('auth.register');
 Route::get('/logout', fn () => Auth::logout())->name('auth.logout');
+Route::get('/password/recovery', Password\Recovery::class)->name('auth.password.recovery');
+Route::get('/password/reset', Password\Reset::class)->name('password.reset');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', Welcome::class)->name('dashboard');
