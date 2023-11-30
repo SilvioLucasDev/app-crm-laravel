@@ -5,12 +5,12 @@ namespace App\Livewire\Admin\Users;
 use App\Models\User;
 use App\Notifications\UserDeletedNotification;
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\{On, Rule};
 use Livewire\Component;
 
 class Delete extends Component
 {
-    public User $user;
+    public ?User $user = null;
 
     #[Rule(['required', 'confirmed'])]
     public string $confirmation = 'DART VADER';
@@ -24,6 +24,13 @@ class Delete extends Component
         return view('livewire.admin.users.delete');
     }
 
+    #[On('user::deletion')]
+    public function openConfirmationFor(int $userId): void
+    {
+        $this->user  = User::select('id', 'name')->find($userId);
+        $this->modal = true;
+    }
+
     public function destroy(): void
     {
         $this->validate();
@@ -31,5 +38,6 @@ class Delete extends Component
         $this->user->delete();
         $this->user->notify(new UserDeletedNotification());
         $this->dispatch('user::deleted');
+        $this->reset('modal');
     }
 }
