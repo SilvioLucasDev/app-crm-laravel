@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\{Permission, User};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +18,8 @@ return new class () extends Migration {
         });
 
         Schema::create('permission_user', function (Blueprint $table) {
-            $table->foreignId('user_id');
-            $table->foreignId('permission_id');
+            $table->foreignIdFor(User::class)->references('id')->on('users');
+            $table->foreignIdFor(Permission::class)->references('id')->on('permissions');
             $table->index(['user_id', 'permission_id']);
             $table->unique(['user_id', 'permission_id']);
         });

@@ -39,6 +39,10 @@ class Restore extends Component
         $this->validate();
 
         $this->user->restore();
+        $this->user->restored_at = now();
+        $this->user->restored_by = auth()->user()->id;
+        $this->user->save();
+
         $this->user->notify(new UserRestoredNotification());
         $this->dispatch('user::restored');
         $this->reset('modal');
