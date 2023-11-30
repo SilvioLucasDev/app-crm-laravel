@@ -13,12 +13,20 @@
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->users">
-        @scope('cell_id', $user)
-            <strong>{{ $user->id }}</strong>
+        @scope('header_id', $header)
+            <x-table.th :$header name="id" />
         @endscope
 
-        @scope('cell_name', $user)
-            {{ $user->name }}
+        @scope('header_name', $header)
+            <x-table.th :$header name="name" />
+        @endscope
+
+        @scope('header_email', $header)
+            <x-table.th :$header name="email" />
+        @endscope
+
+        @scope('cell_id', $user)
+            <strong>{{ $user->id }}</strong>
         @endscope
 
         @scope('cell_permissions', $user)

@@ -140,3 +140,32 @@ it('should be able to list deleted users', function () {
             return true;
         });
 });
+
+it('should be able to sort by id, name and email', function () {
+    /** @var User $admin */
+    $admin = User::factory()->admin()->create(['name' => 'Is Admin', 'email' => 'is_dmin@mail.com']);
+    User::factory()->create(['name' => 'Is User', 'email' => 'any_email@mail.com']);
+    actingAs($admin);
+
+    // ASC => Is Admin, Is User
+    // DESC => Is User, Is Admin
+    Livewire::test(Admin\Users\Index::class)
+        ->set('sortDirection', 'asc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->first()->name->toBe('Is Admin')
+                ->and($users)->last()->name->toBe('Is User');
+
+            return true;
+        })
+        ->set('sortDirection', 'desc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->first()->name->toBe('Is User')
+                ->and($users)->last()->name->toBe('Is Admin');
+
+            return true;
+        });
+});

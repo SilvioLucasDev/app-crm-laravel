@@ -23,9 +23,9 @@ class Index extends Component
 
     public Collection $permissionsToSearch;
 
-    protected $queryString = [
-        'search' => ['except' => ''],
-    ];
+    public string $sortDirection = 'asc';
+
+    public string $sortColumnBy = 'id';
 
     #[Computed]
     public function users(): LengthAwarePaginator
@@ -49,7 +49,8 @@ class Index extends Component
             })->when($this->search_trash, function (Builder $query) {
                 $query->onlyTrashed();
 
-            })->paginate(10);
+            })->orderBy($this->sortColumnBy, $this->sortDirection)
+            ->paginate(10);
     }
 
     #[Computed]
@@ -71,6 +72,12 @@ class Index extends Component
                 $query->where('key', 'like', "%$value%");
             })->orderBy('key')
             ->get();
+    }
+
+    public function sortBy(string $column, string $direction): void
+    {
+        $this->sortColumnBy  = $column;
+        $this->sortDirection = $direction;
     }
 
     public function mount(): void
