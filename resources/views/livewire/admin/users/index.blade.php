@@ -50,7 +50,7 @@
                         wire:click="destroy('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
                 @endunless
             @else
-                <x-button icon="o-arrow-path-rounded-square" wire:click="delete({{ $user->id }})" spinner
+                <x-button icon="o-arrow-path-rounded-square" wire:click="restore({{ $user->id }})" spinner
                     class="btn-sm btn-success btn-ghost" />
             @endunless
         @endscope
@@ -61,4 +61,5 @@
     </div>
 
     <livewire:admin.users.delete />
+    <livewire:admin.users.restore />
 </div>
