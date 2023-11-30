@@ -44,15 +44,23 @@
         @endscope
 
         @scope('actions', $user)
-            @unless ($user->trashed())
-                @unless ($user->is(auth()->user()))
-                    <x-button id="delete-btn-{{ $user->id }}" wire:key="delete-btn-{{ $user->id }}" icon="o-trash"
-                        wire:click="destroy('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
-                @endunless
-            @else
-                <x-button icon="o-arrow-path-rounded-square" wire:click="restore({{ $user->id }})" spinner
-                    class="btn-sm btn-success btn-ghost" />
-            @endunless
+            <div class="flex items-centes space-x-1">
+                <x-button id="show-btn-{{ $user->id }}" wire:key="show-btn-{{ $user->id }}" icon="o-eye"
+                    wire:click="show('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
+
+                @can(\App\Enums\Can::BE_AN_ADMIN->value)
+                    @unless ($user->trashed())
+                        @unless ($user->is(auth()->user()))
+                            <x-button id="delete-btn-{{ $user->id }}" wire:key="delete-btn-{{ $user->id }}" icon="o-trash"
+                                wire:click="destroy('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
+                        @endunless
+                    @else
+                        <x-button id="restore-btn-{{ $user->id }}" wire:key="restore-btn-{{ $user->id }}"
+                            icon="o-arrow-path-rounded-square" wire:click="restore({{ $user->id }})" spinner
+                            class="btn-sm btn-success btn-ghost" />
+                    @endunless
+                @endcan
+            </div>
         @endscope
     </x-table>
 
@@ -62,4 +70,5 @@
 
     <livewire:admin.users.delete />
     <livewire:admin.users.restore />
+    <livewire:admin.users.show />
 </div>
