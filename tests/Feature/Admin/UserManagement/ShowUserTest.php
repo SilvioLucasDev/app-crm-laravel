@@ -29,8 +29,8 @@ it('should open the modal when the event is dispatched', function () {
     actingAs($admin);
 
     Livewire::test(Admin\Users\Index::class)
-        ->call('showUser', $user->id)
-        ->assertDispatched('user::show', userId: $user->id);
+        ->call('show', $user->id)
+        ->assertDispatched('user::showing', userId: $user->id);
 });
 
 it('making sure that the the method loadUser has the attribute On', function () {
@@ -50,5 +50,5 @@ it('making sure that the the method loadUser has the attribute On', function () 
         ->and($attribute)->getArguments()->toHaveCount(1);
 
     $argument = $attribute->getArguments()[0];
-    expect($argument)->toBe('user::show');
+    expect($argument)->toBe('user::showing');
 });

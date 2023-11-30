@@ -18,10 +18,10 @@ class Show extends Component
         return view('livewire.admin.users.show');
     }
 
-    #[On('user::show')]
-    public function loadUser(int $id): void
+    #[On('user::showing')]
+    public function loadUser(int $userId): void
     {
-        $this->user  = User::withTrashed()->find($id);
+        $this->user  = User::withTrashed()->find($userId);
         $this->modal = true;
     }
 }
