@@ -34,14 +34,22 @@ class Delete extends Component
         $this->modal = true;
     }
 
-    public function destroy(): void
+    public function destroy(): bool
     {
         $this->validate();
+
+        if($this->user->is(auth()->user())) {
+            $this->addError('confirmation', "You can't delete yourself brow.");
+
+            return false;
+        }
 
         $this->user->delete();
         $this->user->notify(new UserDeletedNotification());
         $this->dispatch('user::deleted');
         $this->reset('modal');
         $this->success('User deleted successfully.');
+
+        return true;
     }
 }
