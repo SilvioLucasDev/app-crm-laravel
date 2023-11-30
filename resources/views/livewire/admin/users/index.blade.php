@@ -18,8 +18,6 @@
         ]" />
 
         <x-checkbox label="Show deleted users" wire:model.live="search_trash" class="checkbox-primary" right tight />
-
-
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->users">
@@ -56,6 +54,6 @@
     </x-table>
 
     <div class="mt-4">
-        {{ $this->users->links() }}
+        {{ $this->users->links(data: ['scrollTo' => false]) }}
     </div>
 </div>
