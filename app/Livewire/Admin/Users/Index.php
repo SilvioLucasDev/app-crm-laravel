@@ -16,14 +16,16 @@ class Index extends Component
 
     public ?string $search = null;
 
-    protected $queryString = [
-        'search' => ['except' => ''],
-    ];
+    public bool $search_trash = false;
 
     #[Rule(['exists:permissions,id'])]
     public array $search_permissions = [];
 
     public Collection $permissionsToSearch;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+    ];
 
     #[Computed]
     public function users(): LengthAwarePaginator
@@ -33,21 +35,21 @@ class Index extends Component
         return User::query()
             ->when($this->search, function (Builder $query) {
                 $query->whereRaw('lower(name) like ?', ['%' . strtolower($this->search) . '%'])
-                ->orWhere(
-                    'email',
-                    'like',
-                    '%' . strtolower($this->search) . '%'
-                );
-            })
-            ->when(
-                $this->search_permissions,
-                function (Builder $query) {
-                    $query->whereHas('permissions', function (Builder $query) {
-                        $query->whereIn('id', $this->search_permissions);
-                    });
-                }
-            )
-            ->paginate(10);
+                    ->orWhere(
+                        'email',
+                        'like',
+                        '%' . strtolower($this->search) . '%'
+                    );
+
+            })->when($this->search_permissions, function (Builder $query) {
+                $query->whereHas('permissions', function (Builder $query) {
+                    $query->whereIn('id', $this->search_permissions);
+                });
+
+            })->when($this->search_trash, function (Builder $query) {
+                $query->onlyTrashed();
+
+            })->paginate(10);
     }
 
     #[Computed]
@@ -67,8 +69,7 @@ class Index extends Component
         $this->permissionsToSearch = Permission::query()
             ->when($value, function (Builder $query) use ($value) {
                 $query->where('key', 'like', "%$value%");
-            })
-            ->orderBy('key')
+            })->orderBy('key')
             ->get();
     }
 
