@@ -35,6 +35,7 @@ class Index extends Component
         $this->validate();
 
         return User::query()
+            ->with('permissions')
             ->when($this->search, function (Builder $query) {
                 $query->whereRaw('lower(name) like ?', ['%' . strtolower($this->search) . '%'])
                     ->orWhere(
@@ -76,12 +77,6 @@ class Index extends Component
             ->get();
     }
 
-    public function sortBy(string $column, string $direction): void
-    {
-        $this->sortColumnBy  = $column;
-        $this->sortDirection = $direction;
-    }
-
     public function mount(): void
     {
         $this->authorize(Can::BE_AN_ADMIN->value);
@@ -96,5 +91,11 @@ class Index extends Component
     public function updating(): void
     {
         $this->resetPage();
+    }
+
+    public function sortBy(string $column, string $direction): void
+    {
+        $this->sortColumnBy  = $column;
+        $this->sortDirection = $direction;
     }
 }
