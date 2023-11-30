@@ -1,5 +1,15 @@
 <div>
-    <x-header title="Users" subtitle="All system users" separator />
+    <x-header title="Users" subtitle="All system users" separator class="mb-2" />
+    <div class="mb-4 flex space-x-4">
+        <div class="w-1/3">
+            <x-input label="Search by email or name" icon="o-magnifying-glass" placeholder="Search..."
+                wire:model.live="search" />
+        </div>
+
+        <x-choices label="Search by permissions" wire:model.live="search_permissions" :options="$permissionsToSearch"
+            option-label="key" search-function="filterPermissions" no-result-text="Ops! Nothing here ..." searchable />
+    </div>
+
     <x-table :headers="$this->headers" :rows="$this->users">
         @scope('cell_id', $user)
             <strong>{{ $user->id }}</strong>
