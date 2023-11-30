@@ -169,3 +169,27 @@ it('should be able to sort by id, name and email', function () {
             return true;
         });
 });
+
+it("should be able to paginate the result", function () {
+    /** @var User $user */
+    $user = User::factory()->admin()->create();
+    User::factory(30)->create();
+    actingAs($user);
+
+    Livewire::test(Admin\Users\Index::class)
+    ->assertSet('users', function ($users) {
+        expect($users)
+            ->toBeInstanceOf(LengthAwarePaginator::class)
+            ->toHaveCount(10);
+
+        return true;
+    })
+    ->set('perPage', 15)
+    ->assertSet('users', function ($users) {
+        expect($users)
+            ->toBeInstanceOf(LengthAwarePaginator::class)
+            ->toHaveCount(15);
+
+        return true;
+    });
+});

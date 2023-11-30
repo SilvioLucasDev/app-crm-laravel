@@ -9,7 +9,17 @@
         <x-choices label="Search by permissions" wire:model.live="search_permissions" :options="$permissionsToSearch"
             option-label="key" search-function="filterPermissions" no-result-text="Ops! Nothing here ..." searchable />
 
+        <x-select label="Records per page" wire:model.live="perPage" :options="[
+            ['id' => 5, 'name' => 5],
+            ['id' => 10, 'name' => 10],
+            ['id' => 15, 'name' => 15],
+            ['id' => 25, 'name' => 25],
+            ['id' => 50, 'name' => 50],
+        ]" />
+
         <x-checkbox label="Show deleted users" wire:model.live="search_trash" class="checkbox-primary" right tight />
+
+
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->users">

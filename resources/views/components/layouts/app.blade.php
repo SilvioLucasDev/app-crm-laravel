@@ -24,7 +24,7 @@
         </x-slot:brand>
     </x-nav>
 
-    <x-main>
+    <x-main with-nav full-width>
         <x-slot:sidebar drawer="main-drawer" collapsible class="pt-3 bg-sky-800 text-white">
 
             {{-- Hidden when collapsed --}}

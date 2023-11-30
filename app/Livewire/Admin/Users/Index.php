@@ -27,6 +27,8 @@ class Index extends Component
 
     public string $sortColumnBy = 'id';
 
+    public int $perPage = 10;
+
     #[Computed]
     public function users(): LengthAwarePaginator
     {
@@ -50,7 +52,7 @@ class Index extends Component
                 $query->onlyTrashed();
 
             })->orderBy($this->sortColumnBy, $this->sortDirection)
-            ->paginate(10);
+            ->paginate($this->perPage);
     }
 
     #[Computed]
