@@ -36,5 +36,6 @@ Route::middleware('auth')->group(function () {
      */
     Route::prefix('/admin')->middleware('can:' . Can::BE_AN_ADMIN->value)->group(function () {
         Route::get('/dashboard', Admin\Dashboard::class)->name('admin.dashboard');
+        Route::get('/users', Admin\Users\Index::class)->name('admin.users');
     });
 });

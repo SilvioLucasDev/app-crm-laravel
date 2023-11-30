@@ -41,9 +41,6 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function withPermission(Can|string $key): static
     {
         $key = $key instanceof Can ? $key->value : $key;
@@ -51,5 +48,19 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) use ($key) {
             $user->givePermissionTo($key);
         });
+    }
+
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->givePermissionTo(Can::BE_AN_ADMIN);
+        });
+    }
+
+    public function deleted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'deleted_at' => now(),
+        ]);
     }
 }

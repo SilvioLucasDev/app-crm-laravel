@@ -33,7 +33,7 @@ trait HasPermissions
         $key = $key instanceof \App\Enums\Can ? $key->value : $key;
 
         /** @var Collection $permissions */
-        $permissions = Cache::get($this->getPermissionCacheKey(), $this->permissions);
+        $permissions = Cache::get($this->getPermissionCacheKey(), fn () => $this->permissions);
 
         return $permissions->where('key', '=', $key)->isNotEmpty();
     }
