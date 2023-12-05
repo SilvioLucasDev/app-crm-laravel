@@ -45,7 +45,7 @@
 
         @scope('actions', $user)
             <div class="flex items-centes space-x-1">
-                <x-button id="show-btn-{{ $user->id }}" wire:key="show-btn-{{ $user->id }}" icon="o-eye"
+                <x-button id="show-btn-{{ $user->id }}" wire:key="show-btn-{{ $user->id }}" icon="o-pencil"
                     wire:click="show('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
 
                 @can(\App\Enums\Can::BE_AN_ADMIN->value)
@@ -53,6 +53,10 @@
                         @unless ($user->is(auth()->user()))
                             <x-button id="delete-btn-{{ $user->id }}" wire:key="delete-btn-{{ $user->id }}" icon="o-trash"
                                 wire:click="destroy('{{ $user->id }}')" spinner class="btn-sm btn-error btn-ghost" />
+
+                            <x-button id="impersonate-btn-{{ $user->id }}" wire:key="impersonate-btn-{{ $user->id }}"
+                                icon="o-eye" wire:click="impersonate('{{ $user->id }}')" spinner
+                                class="btn-sm btn-error btn-ghost" />
                         @endunless
                     @else
                         <x-button id="restore-btn-{{ $user->id }}" wire:key="restore-btn-{{ $user->id }}"
@@ -71,4 +75,5 @@
     <livewire:admin.users.delete />
     <livewire:admin.users.restore />
     <livewire:admin.users.show />
+    <livewire:admin.users.impersonate />
 </div>
