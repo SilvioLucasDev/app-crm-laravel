@@ -49,7 +49,8 @@
                     <x-list-item :item="$user" sub-value="username" no-separator no-hover
                         class="!-mx-2 mt-2 mb-5 border-y border-y-sky-900">
                         <x-slot:actions>
-                            <livewire:auth.logout />
+                            <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="logoff"
+                                @click="$dispatch('logout')" />
                         </x-slot:actions>
                     </x-list-item>
                 @endif
@@ -69,6 +70,7 @@
             {{ $slot }}
         </x-slot:content>
     </x-main>
+    <livewire:auth.logout />
 </body>
 
 </html>
