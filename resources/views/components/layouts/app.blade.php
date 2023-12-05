@@ -11,6 +11,9 @@
 
 <body class="min-h-screen font-sans antialiased">
     <x-toast />
+    @if (session('impersonate'))
+        <livewire:admin.users.stop-impersonate>
+    @endif
 
     {{-- Displays only on mobile --}}
     <x-nav sticky class="lg:hidden bg-sky-800 text-white">
@@ -48,7 +51,6 @@
                 @endif
 
                 <x-menu-item title="Home" icon="o-home" link="/" />
-                <x-menu-item title="Yeah" icon="o-sparkles" link="####" />
 
                 @can(\App\Enums\Can::BE_AN_ADMIN->value)
                     <x-menu-sub title="Admin" icon="o-lock-closed">
