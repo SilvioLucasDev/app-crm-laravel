@@ -18,6 +18,6 @@ class StopImpersonate extends Component
     {
         session()->forget('impersonate');
 
-        $this->redirect(route('admin.users'));
+        $this->redirectRoute('admin.users');
     }
 }

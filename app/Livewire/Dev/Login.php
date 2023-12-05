@@ -23,4 +23,10 @@ class Login extends Component
         return view('livewire.dev.login');
     }
 
+    public function login(): void
+    {
+        auth()->loginUsingId($this->selectedUser);
+
+        $this->redirectRoute('dashboard');
+    }
 }
