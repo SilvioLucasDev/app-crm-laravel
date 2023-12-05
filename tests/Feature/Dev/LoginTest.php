@@ -36,3 +36,13 @@ it('should not load the livewire component on production environment', function 
     get(route('dashboard'))
         ->assertDontSeeLivewire('dev.login');
 });
+
+it('should load the livewire component on non production environment', function () {
+    $user = User::factory()->create();
+    actingAs($user);
+
+    app()->detectEnvironment(fn () => 'local');
+
+    get(route('dashboard'))
+        ->assertSeeLivewire('dev.login');
+});
