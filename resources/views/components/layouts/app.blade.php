@@ -11,6 +11,9 @@
 
 <body class="min-h-screen font-sans antialiased">
     <x-toast />
+    @if (session('impersonate'))
+        <livewire:admin.users.stop-impersonate>
+    @endif
 
     {{-- Displays only on mobile --}}
     <x-nav sticky class="lg:hidden bg-sky-800 text-white">
@@ -59,9 +62,6 @@
         </x-slot:sidebar>
 
         <x-slot:content>
-            @if (session('impersonate'))
-                {{ trans("You're impersonating :name, click here to stop the impersonation.", ['name' => auth()->user()->name]) }}
-            @endif
             {{ $slot }}
         </x-slot:content>
     </x-main>
