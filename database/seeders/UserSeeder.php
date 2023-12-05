@@ -19,5 +19,12 @@ class UserSeeder extends Seeder
                 'name'  => 'Admin do CRM',
                 'email' => 'admin@crm.com',
             ]);
+
+        User::factory(50)->create();
+        User::factory(10)->deleted()->create();
+
+        /** @var User $user */
+        $user = User::find(3);
+        $user->givePermissionTo(Can::BE_AN_ADMIN);
     }
 }
