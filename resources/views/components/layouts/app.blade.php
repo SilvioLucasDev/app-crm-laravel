@@ -15,6 +15,10 @@
         <livewire:admin.users.stop-impersonate>
     @endif
 
+    @if (!app()->environment('production'))
+        <livewire:dev.login>
+    @endif
+
     {{-- Displays only on mobile --}}
     <x-nav sticky class="lg:hidden bg-sky-800 text-white">
         <x-slot:brand>

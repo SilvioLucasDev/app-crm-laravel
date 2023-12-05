@@ -28,6 +28,6 @@ class Impersonate extends Component
         session()->put('impersonator', auth()->user()->id);
         session()->put('impersonate', $userId);
 
-        $this->redirect(route('dashboard'));
+        $this->redirectRoute('dashboard');
     }
 }
