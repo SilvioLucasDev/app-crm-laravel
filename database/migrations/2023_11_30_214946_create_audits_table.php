@@ -32,7 +32,7 @@ class CreateAuditsTable extends Migration
             $table->ipAddress('ip_address')->nullable();
             $table->string('user_agent', 1023)->nullable();
             $table->string('tags')->nullable();
-            $table->foreignIdFor(User::class, 'impersonated_user')->references('id')->on('users')->nullable();
+            $table->foreignIdFor(User::class, 'impersonated_user')->nullable();
             $table->timestamps();
 
             $table->index([$morphPrefix . '_id', $morphPrefix . '_type']);
