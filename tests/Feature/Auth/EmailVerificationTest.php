@@ -2,6 +2,7 @@
 
 use App\Listeners\Auth\CreateValidationCode;
 use App\Models\User;
+use App\Notifications\Auth\ValidationCodeNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Notification;
 
@@ -28,7 +29,14 @@ it('should create a new validation code and sabe in the users table', function (
 });
 
 it('should send that new code to the user via email', function () {
-})->todo();
+    $user = User::factory()->create(['email_verified_at' => null, 'validation_code' => null]);
+
+    $event    = new Registered($user);
+    $listener = new CreateValidationCode();
+    $listener->handle($event);
+
+    Notification::assertSentTo($user, ValidationCodeNotification::class);
+});
 
 it('making sure that the listener to send the code is linked to the Registered event', function () {
 })->todo();
