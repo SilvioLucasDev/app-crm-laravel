@@ -60,9 +60,16 @@ class UserFactory extends Factory
 
     public function deleted(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn () => [
             'deleted_at' => now(),
             'deleted_by' => User::factory()->create(),
+        ]);
+    }
+
+    public function withValidationCode(): static
+    {
+        return $this->state(fn () => [
+            'validation_code' => random_int(100000, 999999),
         ]);
     }
 }
