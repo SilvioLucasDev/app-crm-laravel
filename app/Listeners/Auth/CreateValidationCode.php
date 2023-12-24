@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Auth;
 
+use App\Events\SendNewCode;
 use App\Models\User;
 use App\Notifications\Auth\ValidationCodeNotification;
 use Illuminate\Auth\Events\Registered;
@@ -19,7 +20,7 @@ class CreateValidationCode
     /**
      * Handle the event.
      */
-    public function handle(Registered $event): void
+    public function handle(Registered|SendNewCode $event): void
     {
         /** @var User $user */
         $user = $event->user;
