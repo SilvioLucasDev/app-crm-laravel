@@ -28,7 +28,7 @@ Route::get('/password/reset', Password\Reset::class)->name('password.reset');
 /**
  * Authenticated Routes
  */
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'email.verified')->group(function () {
     Route::get('/', Welcome::class)->name('dashboard');
 
     /**
