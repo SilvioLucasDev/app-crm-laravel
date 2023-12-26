@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'name'              => fake()->name(),
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'validation_code'   => null,
             'password'          => static::$password ??= Hash::make('password'),
             'remember_token'    => Str::random(10),
         ];
@@ -59,9 +60,17 @@ class UserFactory extends Factory
 
     public function deleted(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn () => [
             'deleted_at' => now(),
             'deleted_by' => User::factory()->create(),
+        ]);
+    }
+
+    public function withValidationCode(): static
+    {
+        return $this->state(fn () => [
+            'email_verified_at' => null,
+            'validation_code'   => random_int(100000, 999999),
         ]);
     }
 }
