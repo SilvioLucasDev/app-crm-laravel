@@ -37,3 +37,106 @@ it("let's create a livewire component to list as customers in the page", functio
         $livewire->assertSee($customer->name);
     }
 });
+
+it('check the table format', function () {
+    /** @var User $user */
+    $user = User::factory()->admin()->create();
+    actingAs($user);
+
+    Livewire::test(Customers\Index::class)
+        ->assertSet('headers', [
+            ['key' => 'id', 'label' => '#'],
+            ['key' => 'name', 'label' => 'Name'],
+            ['key' => 'email', 'label' => 'Email'],
+        ]);
+});
+
+it('should be able to filter by name and email', function () {
+    /** @var User $user */
+    $user = User::factory()->create();
+    actingAs($user);
+
+    Customer::factory()->create(['name' => 'Joe', 'email' => 'doe@mail.com']);
+    Customer::factory()->create(['name' => 'Any', 'email' => 'user@mail.com']);
+
+    Livewire::test(Customers\Index::class)
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->toBeInstanceOf(LengthAwarePaginator::class)
+                ->toHaveCount(2);
+
+            return true;
+        })
+        ->set('search', 'joe')
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->toHaveCount(1)
+                ->first()->name->toBe('Joe');
+
+            return true;
+        })
+        ->set('search', 'User')
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->toHaveCount(1)
+                ->first()->name->toBe('Any');
+
+            return true;
+        });
+});
+
+it('should be able to sort by id, name and email', function () {
+    /** @var User $user */
+    $user = User::factory()->create();
+    actingAs($user);
+
+    Customer::factory()->create(['name' => 'Joe', 'email' => 'doe@mail.com']);
+    Customer::factory()->create(['name' => 'Any', 'email' => 'user@mail.com']);
+
+    // ASC => Any, Joe
+    // DESC => Joe, Any
+    Livewire::test(Customers\Index::class)
+        ->set('sortDirection', 'asc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->first()->name->toBe('Any')
+                ->and($customers)->last()->name->toBe('Joe');
+
+            return true;
+        })
+        ->set('sortDirection', 'desc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->first()->name->toBe('Joe')
+                ->and($customers)->last()->name->toBe('Any');
+
+            return true;
+        });
+});
+
+it("should be able to paginate the result", function () {
+    /** @var User $user */
+    $user = User::factory()->create();
+    actingAs($user);
+
+    Customer::factory(30)->create();
+
+    Livewire::test(Customers\Index::class)
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->toBeInstanceOf(LengthAwarePaginator::class)
+                ->toHaveCount(10);
+
+            return true;
+        })
+        ->set('perPage', 15)
+        ->assertSet('customers', function ($customers) {
+            expect($customers)
+                ->toBeInstanceOf(LengthAwarePaginator::class)
+                ->toHaveCount(15);
+
+            return true;
+        });
+});

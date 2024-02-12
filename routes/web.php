@@ -2,7 +2,7 @@
 
 use App\Enums\Can;
 use App\Livewire\Auth\{EmailValidation, Login, Password, Register};
-use App\Livewire\{Admin, Welcome};
+use App\Livewire\{Admin, Customers, Welcome};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,7 +34,7 @@ Route::middleware('auth', 'email.verified')->group(function () {
     /**
      * Customers Routes
      */
-    Route::get('/customers', fn () => 'oi')->name('customers');
+    Route::get('/customers', Customers\Index::class)->name('customers');
 
     /**
      * Admin Routes
