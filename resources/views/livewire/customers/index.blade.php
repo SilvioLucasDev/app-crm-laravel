@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <x-button wire:click="create()" label="New Customer" icon="o-plus" />
+        <x-button wire:click="create()" label="New Customer" icon="o-plus" spinner />
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->items">
