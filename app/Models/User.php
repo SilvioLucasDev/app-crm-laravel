@@ -19,9 +19,9 @@ class User extends Authenticatable implements Auditable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
-    use HasPermissions;
     use SoftDeletes;
     use AuditableTrait;
+    use HasPermissions;
     use HasSearch;
 
     /**
