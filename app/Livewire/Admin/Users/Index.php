@@ -3,7 +3,9 @@
 namespace App\Livewire\Admin\Users;
 
 use App\Enums\Can;
+use App\Helpers\Table\Header;
 use App\Models\{Permission, User};
+use App\Traits\Livewire\HasTable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\{Builder, Collection};
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,10 +15,7 @@ use Livewire\{Component, WithPagination};
 class Index extends Component
 {
     use WithPagination;
-
-    protected $paginationTheme = 'tailwind';
-
-    public ?string $search = null;
+    use HasTable;
 
     public bool $search_trash = false;
 
@@ -24,12 +23,6 @@ class Index extends Component
     public array $search_permissions = [];
 
     public Collection $permissionsToSearch;
-
-    public string $sortDirection = 'asc';
-
-    public string $sortColumnBy = 'id';
-
-    public int $perPage = 10;
 
     #[Computed]
     public function users(): LengthAwarePaginator
@@ -54,14 +47,16 @@ class Index extends Component
             ->paginate($this->perPage);
     }
 
-    #[Computed]
-    public function headers(): array
+    /**
+     * @return Header[]
+     */
+    public function tableHeaders(): array
     {
         return [
-            ['key' => 'id', 'label' => '#'],
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'email', 'label' => 'Email'],
-            ['key' => 'permissions', 'label' => 'Permissions'],
+            Header::make('id', '#'),
+            Header::make('name', 'Name'),
+            Header::make('email', 'Email'),
+            Header::make('permissions', 'Permissions'),
         ];
     }
 
