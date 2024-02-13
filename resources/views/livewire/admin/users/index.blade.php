@@ -20,7 +20,7 @@
         <x-checkbox label="Show deleted users" wire:model.live="search_trash" class="checkbox-primary" right tight />
     </div>
 
-    <x-table :headers="$this->headers" :rows="$this->users">
+    <x-table :headers="$this->headers" :rows="$this->items">
         @scope('header_id', $header)
             <x-table.th :$header name="id" />
         @endscope
@@ -31,10 +31,6 @@
 
         @scope('header_email', $header)
             <x-table.th :$header name="email" />
-        @endscope
-
-        @scope('cell_id', $user)
-            <strong>{{ $user->id }}</strong>
         @endscope
 
         @scope('cell_permissions', $user)
@@ -69,7 +65,7 @@
     </x-table>
 
     <div class="mt-4">
-        {{ $this->users->links(data: ['scrollTo' => false]) }}
+        {{ $this->items->links(data: ['scrollTo' => false]) }}
     </div>
 
     <livewire:admin.users.delete />

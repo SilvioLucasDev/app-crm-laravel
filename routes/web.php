@@ -2,8 +2,8 @@
 
 use App\Enums\Can;
 use App\Livewire\Auth\{EmailValidation, Login, Password, Register};
-use App\Livewire\{Admin, Welcome};
-use Illuminate\Support\Facades\{Auth, Route};
+use App\Livewire\{Admin, Customers, Welcome};
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +30,11 @@ Route::get('/password/reset', Password\Reset::class)->name('password.reset');
  */
 Route::middleware('auth', 'email.verified')->group(function () {
     Route::get('/', Welcome::class)->name('dashboard');
+
+    /**
+     * Customers Routes
+     */
+    Route::get('/customers', Customers\Index::class)->name('customers');
 
     /**
      * Admin Routes
