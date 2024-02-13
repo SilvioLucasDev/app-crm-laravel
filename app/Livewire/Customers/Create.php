@@ -28,7 +28,7 @@ class Create extends Component
         return view('livewire.customers.create');
     }
 
-    #[On('customer::create')]
+    #[On('customer::creating')]
     public function openModal(): void
     {
         $this->resetErrorBag();
@@ -46,6 +46,7 @@ class Create extends Component
             'phone' => $this->phone,
         ]);
 
+        $this->dispatch('customer::created');
         $this->reset('modal');
         $this->success('Customer created successfully.');
     }

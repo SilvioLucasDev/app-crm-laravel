@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <x-button @click="$dispatch('customer::create')" label="New Customer" icon="o-plus" />
+        <x-button wire:click="create()" label="New Customer" icon="o-plus" />
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->items">
@@ -33,6 +33,19 @@
         @scope('header_email', $header)
             <x-table.th :$header name="email" />
         @endscope
+
+        @scope('actions', $customer)
+            <div class="flex items-centes space-x-1">
+                @unless ($customer->trashed())
+                    <x-button id="archive-btn-{{ $customer->id }}" wire:key="archive-btn-{{ $customer->id }}" icon="o-trash"
+                        wire:click="archive('{{ $customer->id }}')" spinner class="btn-sm btn-ghost" />
+                @else
+                    <x-button id="restore-btn-{{ $customer->id }}" wire:key="restore-btn-{{ $customer->id }}"
+                        icon="o-arrow-path-rounded-square" wire:click="restore({{ $customer->id }})" spinner
+                        class="btn-sm btn-success btn-ghost" />
+                @endunless
+            </div>
+        @endscope
     </x-table>
 
     <div class="mt-4">
@@ -40,4 +53,5 @@
     </div>
 
     <livewire:customers.create />
+    <livewire:customers.archive />
 </div>

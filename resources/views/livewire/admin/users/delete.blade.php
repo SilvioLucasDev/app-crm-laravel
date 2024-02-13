@@ -11,6 +11,6 @@
 
     <x-slot:actions>
         <x-button label="Cancel" @click="$wire.modal = false" />
-        <x-button label="Confirm" class="btn-primary" wire:click="destroy" spinner />
+        <x-button label="Confirm" class="btn-primary" wire:click="destroy()" spinner />
     </x-slot:actions>
 </x-modal>
