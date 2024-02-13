@@ -31,11 +31,8 @@ class Index extends Component
 
         return User::query()
             ->with('permissions')
-            ->when($this->search, function (Builder $query) {
-                $query->whereRaw('lower(name) like ?', ['%' . strtolower($this->search) . '%'])
-                ->orWhereRaw('lower(email) like ?', ['%' . strtolower($this->search) . '%']);
-
-            })->when($this->search_permissions, function (Builder $query) {
+            ->search($this->search, ['name', 'email'])
+            ->when($this->search_permissions, function (Builder $query) {
                 $query->whereHas('permissions', function (Builder $query) {
                     $query->whereIn('id', $this->search_permissions);
                 });
