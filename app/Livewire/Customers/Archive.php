@@ -13,6 +13,8 @@ class Archive extends Component
 
     public ?Customer $customer = null;
 
+    public bool $modal = false;
+
     public function render()
     {
         return view('livewire.customers.archive');
@@ -22,13 +24,15 @@ class Archive extends Component
     public function openConfirmationFor(int $customerId): void
     {
         $this->customer = Customer::select('id', 'name')->find($customerId);
-        $this->archive();
+        $this->modal    = true;
     }
 
     public function archive(): void
     {
         $this->customer->delete();
 
+        $this->dispatch('customer::archived');
+        $this->reset('modal');
         $this->success('Customer archived successfully.');
     }
 }

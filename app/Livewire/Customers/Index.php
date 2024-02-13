@@ -16,6 +16,7 @@ class Index extends Component
     use HasTable;
 
     #[On('customer::created')]
+    #[On('customer::archived')]
     public function render(): View
     {
         return view('livewire.customers.index');
