@@ -14,14 +14,9 @@ class Index extends Component
     use WithPagination;
     use HasTable;
 
-    public function query(): Builder
+    public function render(): View
     {
-        return Customer::query();
-    }
-
-    public function searchColumns(): array
-    {
-        return ['name', 'email'];
+        return view('livewire.customers.index');
     }
 
     /**
@@ -36,8 +31,13 @@ class Index extends Component
         ];
     }
 
-    public function render(): View
+    public function searchColumns(): array
     {
-        return view('livewire.customers.index');
+        return ['name', 'email'];
+    }
+
+    public function query(): Builder
+    {
+        return Customer::query();
     }
 }

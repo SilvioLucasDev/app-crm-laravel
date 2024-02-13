@@ -23,39 +23,6 @@ class Index extends Component
 
     public Collection $permissionsToSearch;
 
-    public function query(): Builder
-    {
-        return User::query()
-        ->with('permissions')
-        ->when($this->search_permissions, function (Builder $query) {
-            $query->whereHas('permissions', function (Builder $query) {
-                $query->whereIn('id', $this->search_permissions);
-            });
-
-        })->when($this->search_trash, function (Builder $query) {
-            $query->onlyTrashed();
-
-        });
-    }
-
-    public function searchColumns(): array
-    {
-        return ['name', 'email'];
-    }
-
-    /**
-     * @return Header[]
-     */
-    public function tableHeaders(): array
-    {
-        return [
-            Header::make('id', '#'),
-            Header::make('name', 'Name'),
-            Header::make('email', 'Email'),
-            Header::make('permissions', 'Permissions'),
-        ];
-    }
-
     #[Computed]
     public function filterPermissions(?string $value = null): void
     {
@@ -82,6 +49,39 @@ class Index extends Component
     public function updating(): void
     {
         $this->resetPage();
+    }
+
+    /**
+     * @return Header[]
+     */
+    public function tableHeaders(): array
+    {
+        return [
+            Header::make('id', '#'),
+            Header::make('name', 'Name'),
+            Header::make('email', 'Email'),
+            Header::make('permissions', 'Permissions'),
+        ];
+    }
+
+    public function searchColumns(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public function query(): Builder
+    {
+        return User::query()
+        ->with('permissions')
+        ->when($this->search_permissions, function (Builder $query) {
+            $query->whereHas('permissions', function (Builder $query) {
+                $query->whereIn('id', $this->search_permissions);
+            });
+
+        })->when($this->search_trash, function (Builder $query) {
+            $query->onlyTrashed();
+
+        });
     }
 
     public function destroy(int $id): void

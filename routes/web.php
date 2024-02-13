@@ -35,6 +35,7 @@ Route::middleware('auth', 'email.verified')->group(function () {
      * Customers Routes
      */
     Route::get('/customers', Customers\Index::class)->name('customers');
+    Route::get('/customers/{customer}', fn () => 'oi')->name('customers.show');
 
     /**
      * Admin Routes

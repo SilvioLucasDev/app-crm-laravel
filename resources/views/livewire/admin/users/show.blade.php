@@ -41,11 +41,11 @@
                         <x-input readonly label="Deleted By" :value="$user->deletedBy->name" />
                     @endif
                 </div>
+
+                <x-slot:actions>
+                    <x-button label="Cancel" @click="$wire.modal = false" />
+                </x-slot:actions>
             </x-card>
         @endif
-
-        <x-slot:actions>
-            <x-button label="Cancel" @click="$wire.modal = false" />
-        </x-slot:actions>
     </x-drawer>
 </div>
