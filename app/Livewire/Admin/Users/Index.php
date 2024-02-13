@@ -8,7 +8,6 @@ use App\Models\{Permission, User};
 use App\Traits\Livewire\HasTable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\{Builder, Collection};
-use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\{Computed, On, Rule};
 use Livewire\{Component, WithPagination};
 
@@ -24,24 +23,24 @@ class Index extends Component
 
     public Collection $permissionsToSearch;
 
-    #[Computed]
-    public function users(): LengthAwarePaginator
+    public function query(): Builder
     {
-        $this->validate();
-
         return User::query()
-            ->with('permissions')
-            ->search($this->search, ['name', 'email'])
-            ->when($this->search_permissions, function (Builder $query) {
-                $query->whereHas('permissions', function (Builder $query) {
-                    $query->whereIn('id', $this->search_permissions);
-                });
+        ->with('permissions')
+        ->when($this->search_permissions, function (Builder $query) {
+            $query->whereHas('permissions', function (Builder $query) {
+                $query->whereIn('id', $this->search_permissions);
+            });
 
-            })->when($this->search_trash, function (Builder $query) {
-                $query->onlyTrashed();
+        })->when($this->search_trash, function (Builder $query) {
+            $query->onlyTrashed();
 
-            })->orderBy($this->sortColumnBy, $this->sortDirection)
-            ->paginate($this->perPage);
+        });
+    }
+
+    public function searchColumns(): array
+    {
+        return ['name', 'email'];
     }
 
     /**
@@ -83,12 +82,6 @@ class Index extends Component
     public function updating(): void
     {
         $this->resetPage();
-    }
-
-    public function sortBy(string $column, string $direction): void
-    {
-        $this->sortColumnBy  = $column;
-        $this->sortDirection = $direction;
     }
 
     public function destroy(int $id): void
