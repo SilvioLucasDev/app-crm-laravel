@@ -109,7 +109,7 @@ it('should be able to filter by permission.key', function () {
 
             return true;
         })
-        ->set('search_permissions', [$permission->id])
+        ->set('searchPermissions', [$permission->id])
         ->assertSet('items', function ($items) {
             expect($items)
                 ->toHaveCount(1)
@@ -133,7 +133,7 @@ it('should be able to list deleted users', function () {
 
             return true;
         })
-        ->set('search_trash', true)
+        ->set('searchTrash', true)
         ->assertSet('items', function ($items) {
             expect($items) ->toHaveCount(2);
 

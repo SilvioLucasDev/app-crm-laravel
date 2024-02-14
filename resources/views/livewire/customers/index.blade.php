@@ -15,7 +15,7 @@
                             wire:model.live="search" />
                     </div>
                     <div class="col-span-3 sm:col-span-1">
-                        <x-checkbox label="Archived" wire:model.live="search_trash" class="checkbox-primary" right
+                        <x-checkbox label="Archived" wire:model.live="searchTrash" class="checkbox-primary" right
                             tight />
                     </div>
                 </div>

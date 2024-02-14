@@ -18,16 +18,16 @@ class Index extends Component
 
     public bool $filtersVisible = false;
 
-    public bool $search_trash = false;
+    public bool $searchTrash = false;
 
     #[Rule(['exists:permissions,id'])]
-    public array $search_permissions = [];
+    public array $searchPermissions = [];
 
     public Collection $permissionsToSearch;
 
     public function filterPermissions(?string $value = null): void
     {
-        $selectedOption = Permission::where('id', $this->search_permissions)->get();
+        $selectedOption = Permission::where('id', $this->searchPermissions)->get();
 
         $this->permissionsToSearch = Permission::query()
             ->when($value, function (Builder $query) use ($value) {
@@ -82,12 +82,12 @@ class Index extends Component
     {
         return User::query()
         ->with('permissions')
-        ->when($this->search_permissions, function (Builder $query) {
+        ->when($this->searchPermissions, function (Builder $query) {
             $query->whereHas('permissions', function (Builder $query) {
-                $query->whereIn('id', $this->search_permissions);
+                $query->whereIn('id', $this->searchPermissions);
             });
 
-        })->when($this->search_trash, function (Builder $query) {
+        })->when($this->searchTrash, function (Builder $query) {
             $query->onlyTrashed();
 
         });
