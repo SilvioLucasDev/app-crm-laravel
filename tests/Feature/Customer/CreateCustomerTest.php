@@ -20,9 +20,13 @@ it('renders successfully', function () {
 it('should be able to create a new customer in the system', function () {
     Livewire::test(Customers\Create::class)
         ->set('name', 'Any User')
+        ->assertPropertyWired('name')
         ->set('email', 'any@email.com')
+        ->assertPropertyWired('email')
         ->set('phone', '123456789')
+        ->assertPropertyWired('phone')
         ->call('save')
+        ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
 
     assertDatabaseHas('customers', [
@@ -73,4 +77,9 @@ test('after created we should close the modal', function () {
         ->set('phone', '123456789')
         ->call('save')
         ->assertSet('modal', false);
+});
+
+test('check if component is in the page', function () {
+    Livewire::test(Customers\Index::class)
+        ->assertContainsLivewireComponent('customers.create');
 });
