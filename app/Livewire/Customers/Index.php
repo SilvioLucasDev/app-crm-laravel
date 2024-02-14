@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Traits\Livewire\HasTable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 use Livewire\{Component, WithPagination};
 
 class Index extends Component
@@ -14,6 +15,12 @@ class Index extends Component
     use WithPagination;
     use HasTable;
 
+    public bool $filtersVisible = false;
+
+    public bool $searchTrash = false;
+
+    #[On('customer::created')]
+    #[On('customer::archived')]
     public function render(): View
     {
         return view('livewire.customers.index');
@@ -36,8 +43,26 @@ class Index extends Component
         return ['name', 'email'];
     }
 
+    public function toggleFilters(): void
+    {
+        $this->filtersVisible = !$this->filtersVisible;
+    }
+
     public function query(): Builder
     {
-        return Customer::query();
+        return Customer::query()
+            ->when($this->searchTrash, function (Builder $query) {
+                $query->onlyTrashed();
+            });
+    }
+
+    public function create(): void
+    {
+        $this->dispatch('customer::creating')->to('customers.create');
+    }
+
+    public function archive(int $id): void
+    {
+        $this->dispatch('customer::archiving', customerId: $id)->to('customers.archive');
     }
 }

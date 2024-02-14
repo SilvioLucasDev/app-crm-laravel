@@ -6,9 +6,12 @@ use App\Models\Customer;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\{On, Rule};
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 class Create extends Component
 {
+    use Toast;
+
     public bool $modal = false;
 
     #[Rule(['required', 'min:3', 'max:255'])]
@@ -25,7 +28,7 @@ class Create extends Component
         return view('livewire.customers.create');
     }
 
-    #[On('customer::create')]
+    #[On('customer::creating')]
     public function openModal(): void
     {
         $this->resetErrorBag();
@@ -43,6 +46,8 @@ class Create extends Component
             'phone' => $this->phone,
         ]);
 
-        $this->modal = false;
+        $this->dispatch('customer::created');
+        $this->reset('modal');
+        $this->success('Customer created successfully.');
     }
 }

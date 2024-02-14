@@ -56,3 +56,21 @@ it('validation rules', function ($f) {
     'phone::required_without:email' => (object)['field' => 'phone', 'value' => '', 'rule' => 'required_without'],
     'phone::unique'                 => (object)['field' => 'phone', 'value' => '123456789', 'rule' => 'unique'],
 ]);
+
+test('after created we should dispatch an event to tell the list to reload', function () {
+    Livewire::test(Customers\Create::class)
+        ->set('name', 'Any User')
+        ->set('email', 'any@email.com')
+        ->set('phone', '123456789')
+        ->call('save')
+        ->assertDispatched('customer::created');
+});
+
+test('after created we should close the modal', function () {
+    Livewire::test(Customers\Create::class)
+        ->set('name', 'Any User')
+        ->set('email', 'any@email.com')
+        ->set('phone', '123456789')
+        ->call('save')
+        ->assertSet('modal', false);
+});

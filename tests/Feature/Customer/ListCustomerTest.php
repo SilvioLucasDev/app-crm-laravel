@@ -140,3 +140,23 @@ it("should be able to paginate the result", function () {
             return true;
         });
 });
+
+it('should be able to list archive customers', function () {
+    Customer::factory()->create();
+    Customer::factory(2)->deleted()->create();
+
+    Livewire::test(Customers\Index::class)
+    ->assertSet('items', function ($items) {
+        expect($items)
+            ->toBeInstanceOf(LengthAwarePaginator::class)
+            ->toHaveCount(1);
+
+        return true;
+    })
+    ->set('searchTrash', true)
+    ->assertSet('items', function ($items) {
+        expect($items) ->toHaveCount(2);
+
+        return true;
+    });
+});

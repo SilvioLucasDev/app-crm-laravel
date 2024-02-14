@@ -8,7 +8,7 @@ use App\Models\{Permission, User};
 use App\Traits\Livewire\HasTable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\{Builder, Collection};
-use Livewire\Attributes\{Computed, On, Rule};
+use Livewire\Attributes\{On, Rule};
 use Livewire\{Component, WithPagination};
 
 class Index extends Component
@@ -16,21 +16,25 @@ class Index extends Component
     use WithPagination;
     use HasTable;
 
-    public bool $search_trash = false;
+    public bool $filtersVisible = false;
+
+    public bool $searchTrash = false;
 
     #[Rule(['exists:permissions,id'])]
-    public array $search_permissions = [];
+    public array $searchPermissions = [];
 
     public Collection $permissionsToSearch;
 
-    #[Computed]
     public function filterPermissions(?string $value = null): void
     {
+        $selectedOption = Permission::where('id', $this->searchPermissions)->get();
+
         $this->permissionsToSearch = Permission::query()
             ->when($value, function (Builder $query) use ($value) {
                 $query->where('key', 'like', "%$value%");
             })->orderBy('key')
-            ->get();
+            ->get()
+            ->merge($selectedOption);
     }
 
     public function mount(): void
@@ -49,6 +53,11 @@ class Index extends Component
     public function updating(): void
     {
         $this->resetPage();
+    }
+
+    public function toggleFilters(): void
+    {
+        $this->filtersVisible = !$this->filtersVisible;
     }
 
     /**
@@ -72,16 +81,14 @@ class Index extends Component
     public function query(): Builder
     {
         return User::query()
-        ->with('permissions')
-        ->when($this->search_permissions, function (Builder $query) {
-            $query->whereHas('permissions', function (Builder $query) {
-                $query->whereIn('id', $this->search_permissions);
+            ->with('permissions')
+            ->when($this->searchPermissions, function (Builder $query) {
+                $query->whereHas('permissions', function (Builder $query) {
+                    $query->whereIn('id', $this->searchPermissions);
+                });
+            })->when($this->searchTrash, function (Builder $query) {
+                $query->onlyTrashed();
             });
-
-        })->when($this->search_trash, function (Builder $query) {
-            $query->onlyTrashed();
-
-        });
     }
 
     public function destroy(int $id): void
