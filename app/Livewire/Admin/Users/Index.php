@@ -81,16 +81,14 @@ class Index extends Component
     public function query(): Builder
     {
         return User::query()
-        ->with('permissions')
-        ->when($this->searchPermissions, function (Builder $query) {
-            $query->whereHas('permissions', function (Builder $query) {
-                $query->whereIn('id', $this->searchPermissions);
+            ->with('permissions')
+            ->when($this->searchPermissions, function (Builder $query) {
+                $query->whereHas('permissions', function (Builder $query) {
+                    $query->whereIn('id', $this->searchPermissions);
+                });
+            })->when($this->searchTrash, function (Builder $query) {
+                $query->onlyTrashed();
             });
-
-        })->when($this->searchTrash, function (Builder $query) {
-            $query->onlyTrashed();
-
-        });
     }
 
     public function destroy(int $id): void

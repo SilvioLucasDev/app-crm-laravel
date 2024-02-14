@@ -25,7 +25,7 @@ it('should be able to show all the details of the user in the component', functi
 
 it('should open the modal when the event is dispatched', function () {
     $admin = User::factory()->admin()->create();
-    $user  = User::factory()->deleted()->create();
+    $user  = User::factory()->create();
     actingAs($admin);
 
     Livewire::test(Admin\Users\Index::class)

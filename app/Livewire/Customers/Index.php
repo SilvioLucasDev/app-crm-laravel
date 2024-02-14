@@ -17,6 +17,8 @@ class Index extends Component
 
     public bool $filtersVisible = false;
 
+    public bool $searchTrash = false;
+
     #[On('customer::created')]
     #[On('customer::archived')]
     public function render(): View
@@ -48,7 +50,10 @@ class Index extends Component
 
     public function query(): Builder
     {
-        return Customer::query();
+        return Customer::query()
+            ->when($this->searchTrash, function (Builder $query) {
+                $query->onlyTrashed();
+            });
     }
 
     public function create(): void
