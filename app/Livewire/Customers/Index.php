@@ -21,6 +21,7 @@ class Index extends Component
 
     #[On('customer::created')]
     #[On('customer::archived')]
+    #[On('customer::restored')]
     public function render(): View
     {
         return view('livewire.customers.index');
@@ -64,5 +65,10 @@ class Index extends Component
     public function archive(int $id): void
     {
         $this->dispatch('customer::archiving', customerId: $id)->to('customers.archive');
+    }
+
+    public function restore(int $id): void
+    {
+        $this->dispatch('customer::restoring', customerId: $id)->to('customers.restore');
     }
 }
