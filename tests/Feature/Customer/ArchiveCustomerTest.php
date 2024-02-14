@@ -48,3 +48,13 @@ test('after archiving we should close the modal', function () {
         ->call('archive')
         ->assertSet('modal', false);
 });
+
+test('making sure archive method is wired', function () {
+    Livewire::test(Customers\Archive::class)
+        ->assertMethodWired('archive()');
+});
+
+test('check if component is in the page', function () {
+    Livewire::test(Customers\Index::class)
+        ->assertContainsLivewireComponent('customers.archive');
+});
