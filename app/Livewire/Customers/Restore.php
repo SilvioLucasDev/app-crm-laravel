@@ -3,6 +3,7 @@
 namespace App\Livewire\Customers;
 
 use App\Models\Customer;
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Mary\Traits\Toast;
@@ -15,7 +16,7 @@ class Restore extends Component
 
     public bool $modal = false;
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.customers.restore');
     }
