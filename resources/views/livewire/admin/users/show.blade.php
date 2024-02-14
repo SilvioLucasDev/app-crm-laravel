@@ -43,7 +43,7 @@
                 </div>
 
                 <x-slot:actions>
-                    <x-button label="Cancel" @click="$wire.modal = false" />
+                    <x-button label="Close" @click="$wire.modal = false" />
                 </x-slot:actions>
             </x-card>
         @endif
