@@ -15,6 +15,8 @@ class Index extends Component
     use WithPagination;
     use HasTable;
 
+    public bool $filtersVisible = false;
+
     #[On('customer::created')]
     #[On('customer::archived')]
     public function render(): View
@@ -37,6 +39,11 @@ class Index extends Component
     public function searchColumns(): array
     {
         return ['name', 'email'];
+    }
+
+    public function toggleFilters(): void
+    {
+        $this->filtersVisible = !$this->filtersVisible;
     }
 
     public function query(): Builder
