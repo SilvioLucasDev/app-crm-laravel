@@ -65,4 +65,5 @@
 
     <livewire:customers.create />
     <livewire:customers.archive />
+    <livewire:customers.restore />
 </div>
