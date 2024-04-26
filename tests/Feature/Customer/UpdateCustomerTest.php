@@ -21,13 +21,13 @@ it('renders successfully', function () {
 
 it('should be able to update a customer', function () {
     Livewire::test(Customers\Update::class)
-        ->set('customer', $this->customer)
-        ->set('customer.name', 'Any User')
-        ->assertPropertyWired('customer.name')
-        ->set('customer.email', 'any@email.com')
-        ->assertPropertyWired('customer.email')
-        ->set('customer.phone', '123456789')
-        ->assertPropertyWired('customer.phone')
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.name', 'Any User')
+        ->assertPropertyWired('form.name')
+        ->set('form.email', 'any@email.com')
+        ->assertPropertyWired('form.email')
+        ->set('form.phone', '123456789')
+        ->assertPropertyWired('form.phone')
         ->call('save')
         ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
@@ -49,39 +49,57 @@ it('validation rules', function ($f) {
     }
 
     $livewire = Livewire::test(Customers\Update::class)
-        ->set('customer', $this->customer)
-        ->set('customer.' . $f->field, $f->value);
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.' . $f->field, $f->value);
 
     $livewire->call('save')
-        ->assertHasErrors(['customer.' . $f->field => $f->rule]);
+        ->assertHasErrors([$f->field => $f->rule]);
 })->with([
-    'name::required'                => (object)['field' => 'name', 'value' => '', 'rule' => 'required'],
-    'name::min:3'                   => (object)['field' => 'name', 'value' => str_repeat('*', 2), 'rule' => 'min'],
-    'name::max:255'                 => (object)['field' => 'name', 'value' => str_repeat('*', 256), 'rule' => 'max'],
-    'email::required_without:phone' => (object)['field' => 'email', 'value' => '', 'rule' => 'required_without'],
-    'email::email'                  => (object)['field' => 'email', 'value' => 'not-an-email', 'rule' => 'email'],
-    'email::max:255'                => (object)['field' => 'email', 'value' => str_repeat('*', 256) . '@email.com', 'rule' => 'max'],
-    'email::unique'                 => (object)['field' => 'email', 'value' => 'any@email.com', 'rule' => 'unique'],
-    'phone::required_without:email' => (object)['field' => 'phone', 'value' => '', 'rule' => 'required_without'],
-    'phone::unique'                 => (object)['field' => 'phone', 'value' => '123456789', 'rule' => 'unique'],
+    'name::required' => (object)['field' => 'name', 'value' => '', 'rule' => 'required'],
+    'name::min:3'    => (object)['field' => 'name', 'value' => str_repeat('*', 2), 'rule' => 'min'],
+    'name::max:255'  => (object)['field' => 'name', 'value' => str_repeat('*', 256), 'rule' => 'max'],
+    'email::email'   => (object)['field' => 'email', 'value' => 'not-an-email', 'rule' => 'email'],
+    'email::max:255' => (object)['field' => 'email', 'value' => str_repeat('*', 256) . '@email.com', 'rule' => 'max'],
+    'email::unique'  => (object)['field' => 'email', 'value' => 'any@email.com', 'rule' => 'unique'],
+    'phone::unique'  => (object)['field' => 'phone', 'value' => '123456789', 'rule' => 'unique'],
 ]);
+
+it('validates phone is required without email', function () {
+    $livewire = Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.email', '')
+        ->set('form.phone', '');
+
+    $livewire->call('save')
+        ->assertHasErrors(['phone' => 'required_without']);
+});
+
+it('validates email is required without phone', function () {
+    $livewire = Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.phone', '')
+        ->set('form.email', '');
+
+    $livewire->call('save')
+        ->assertHasErrors(['email' => 'required_without']);
+});
 
 test('after updated we should dispatch an event to tell the list to reload', function () {
     Livewire::test(Customers\Update::class)
-        ->set('customer', $this->customer)
-        ->set('customer.name', 'Any User')
-        ->set('customer.email', 'any@email.com')
-        ->set('customer.phone', '123456789')
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.name', 'Any User')
+        ->set('form.email', 'any@email.com')
+        ->set('form.phone', '123456789')
         ->call('save')
         ->assertDispatched('customer::updated');
 });
 
 test('after updated we should close the modal', function () {
     Livewire::test(Customers\Update::class)
-        ->set('customer', $this->customer)
-        ->set('customer.name', 'Any User')
-        ->set('customer.email', 'any@email.com')
-        ->set('customer.phone', '123456789')
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.name', 'Any User')
+        ->set('form.email', 'any@email.com')
+        ->set('form.phone', '123456789')
         ->call('save')
         ->assertSet('modal', false);
 });
