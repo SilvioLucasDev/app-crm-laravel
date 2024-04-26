@@ -44,10 +44,6 @@ it('should be able to update a customer', function () {
 });
 
 it('validation rules', function ($f) {
-    if ($f->rule == 'unique') {
-        Customer::factory()->create([$f->field => $f->value]);
-    }
-
     $livewire = Livewire::test(Customers\Update::class)
         ->call('loadCustomer', $this->customer->id)
         ->set('form.' . $f->field, $f->value);
@@ -60,28 +56,56 @@ it('validation rules', function ($f) {
     'name::max:255'  => (object)['field' => 'name', 'value' => str_repeat('*', 256), 'rule' => 'max'],
     'email::email'   => (object)['field' => 'email', 'value' => 'not-an-email', 'rule' => 'email'],
     'email::max:255' => (object)['field' => 'email', 'value' => str_repeat('*', 256) . '@email.com', 'rule' => 'max'],
-    'email::unique'  => (object)['field' => 'email', 'value' => 'any@email.com', 'rule' => 'unique'],
-    'phone::unique'  => (object)['field' => 'phone', 'value' => '123456789', 'rule' => 'unique'],
 ]);
 
-it('validates phone is required without email', function () {
+test('validates email is required without phone', function () {
+    Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.phone', '')
+        ->set('form.email', '')
+        ->call('save')
+        ->assertHasErrors(['email' => 'required_without']);
+});
+
+test('validates email is unique', function () {
+    Customer::factory()->create(['email' => 'any@email.com']);
+
+    Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.email', 'any@email.com')
+        ->call('save')
+        ->assertHasErrors(['email' => 'unique']);
+
+    Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.email', $this->customer->email)
+        ->call('save')
+        ->assertHasNoErrors(['email' => 'unique']);
+});
+
+test('validates phone is required without email', function () {
     $livewire = Livewire::test(Customers\Update::class)
         ->call('loadCustomer', $this->customer->id)
         ->set('form.email', '')
-        ->set('form.phone', '');
-
-    $livewire->call('save')
+        ->set('form.phone', '')
+        ->call('save')
         ->assertHasErrors(['phone' => 'required_without']);
 });
 
-it('validates email is required without phone', function () {
-    $livewire = Livewire::test(Customers\Update::class)
-        ->call('loadCustomer', $this->customer->id)
-        ->set('form.phone', '')
-        ->set('form.email', '');
+test('validates phone is unique', function () {
+    Customer::factory()->create(['phone' => '11988883333']);
 
-    $livewire->call('save')
-        ->assertHasErrors(['email' => 'required_without']);
+    Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.phone', '11988883333')
+        ->call('save')
+        ->assertHasErrors(['phone' => 'unique']);
+
+    Livewire::test(Customers\Update::class)
+        ->call('loadCustomer', $this->customer->id)
+        ->set('form.phone', $this->customer->phone)
+        ->call('save')
+        ->assertHasNoErrors(['phone' => 'unique']);
 });
 
 test('after updated we should dispatch an event to tell the list to reload', function () {

@@ -20,6 +20,7 @@ class Index extends Component
     public bool $searchTrash = false;
 
     #[On('customer::created')]
+    #[On('customer::updated')]
     #[On('customer::archived')]
     #[On('customer::restored')]
     public function render(): View
@@ -60,6 +61,11 @@ class Index extends Component
     public function create(): void
     {
         $this->dispatch('customer::creating')->to('customers.create');
+    }
+
+    public function update(int $id): void
+    {
+        $this->dispatch('customer::updating', customerId: $id)->to('customers.update');
     }
 
     public function archive(int $id): void

@@ -47,6 +47,9 @@
 
         @scope('actions', $customer)
             <div class="flex items-centes space-x-1">
+                <x-button id="update-btn-{{ $customer->id }}" wire:key="update-btn-{{ $customer->id }}" icon="o-pencil"
+                    wire:click="update('{{ $customer->id }}')" spinner class="btn-sm btn-ghost" />
+
                 @unless ($customer->trashed())
                     <x-button id="archive-btn-{{ $customer->id }}" wire:key="archive-btn-{{ $customer->id }}" icon="o-trash"
                         wire:click="archive('{{ $customer->id }}')" spinner class="btn-sm btn-ghost" />
