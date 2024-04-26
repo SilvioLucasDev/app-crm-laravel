@@ -25,7 +25,7 @@ it('should be able to show all the details of the user in the component', functi
 
 it('should open the modal when the event is dispatched', function () {
     $admin = User::factory()->admin()->create();
-    $user  = User::factory()->deleted()->create();
+    $user  = User::factory()->create();
     actingAs($admin);
 
     Livewire::test(Admin\Users\Index::class)
@@ -51,4 +51,10 @@ it('making sure that the the method loadUser has the attribute On', function () 
 
     $argument = $attribute->getArguments()[0];
     expect($argument)->toBe('user::showing');
+});
+
+test('check if component is in the page', function () {
+    actingAs(User::factory()->admin()->create());
+    Livewire::test(Admin\Users\Index::class)
+        ->assertContainsLivewireComponent('admin.users.show');
 });

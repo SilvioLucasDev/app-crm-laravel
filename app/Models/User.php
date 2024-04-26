@@ -4,10 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Traits\Models\HasPermissions;
+use App\Traits\Models\{HasPermissions, HasSearch};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,9 +19,10 @@ class User extends Authenticatable implements Auditable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
-    use HasPermissions;
     use SoftDeletes;
     use AuditableTrait;
+    use HasPermissions;
+    use HasSearch;
 
     /**
      * The attributes that are mass assignable.
