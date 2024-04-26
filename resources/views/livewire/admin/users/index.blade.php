@@ -14,9 +14,9 @@
                             wire:model.live="search" />
                     </div>
                     <div class="col-span-3 sm:col-span-1 w-full">
-                        <x-choices label="Search by permissions" wire:model.live="searchPermissions" :options="$permissionsToSearch"
+                        <x-choices label="Search by permissions" wire:model="searchPermissions" :options="$permissionsToSearch"
                             option-label="key" no-result-text="Ops! Nothing here ..." searchable
-                            search-function="filterPermissions" debounce="3000ms" />
+                            search-function="filterPermissions" debounce="300ms" />
                     </div>
                     <div class="col-span-3 sm:col-span-1">
                         <x-checkbox label="Deleted" wire:model.live="searchTrash" class="checkbox-primary" right

@@ -19,12 +19,12 @@ it('renders successfully', function () {
 
 it('should be able to create a new customer in the system', function () {
     Livewire::test(Customers\Create::class)
-        ->set('name', 'Any User')
-        ->assertPropertyWired('name')
-        ->set('email', 'any@email.com')
-        ->assertPropertyWired('email')
-        ->set('phone', '123456789')
-        ->assertPropertyWired('phone')
+        ->set('form.name', 'Any User')
+        ->assertPropertyWired('form.name')
+        ->set('form.email', 'any@email.com')
+        ->assertPropertyWired('form.email')
+        ->set('form.phone', '123456789')
+        ->assertPropertyWired('form.phone')
         ->call('save')
         ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
@@ -45,7 +45,7 @@ it('validation rules', function ($f) {
     }
 
     $livewire = Livewire::test(Customers\Create::class)
-        ->set($f->field, $f->value);
+    ->set('form.' . $f->field, $f->value);
 
     $livewire->call('save')
         ->assertHasErrors([$f->field => $f->rule]);
@@ -63,18 +63,18 @@ it('validation rules', function ($f) {
 
 test('after created we should dispatch an event to tell the list to reload', function () {
     Livewire::test(Customers\Create::class)
-        ->set('name', 'Any User')
-        ->set('email', 'any@email.com')
-        ->set('phone', '123456789')
+        ->set('form.name', 'Any User')
+        ->set('form.email', 'any@email.com')
+        ->set('form.phone', '123456789')
         ->call('save')
         ->assertDispatched('customer::created');
 });
 
 test('after created we should close the modal', function () {
     Livewire::test(Customers\Create::class)
-        ->set('name', 'Any User')
-        ->set('email', 'any@email.com')
-        ->set('phone', '123456789')
+        ->set('form.name', 'Any User')
+        ->set('form.email', 'any@email.com')
+        ->set('form.phone', '123456789')
         ->call('save')
         ->assertSet('modal', false);
 });

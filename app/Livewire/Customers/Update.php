@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Customers;
 
+use App\Models\Customer;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Mary\Traits\Toast;
 
-class Create extends Component
+class Update extends Component
 {
     use Toast;
 
@@ -17,22 +18,25 @@ class Create extends Component
 
     public function render(): View
     {
-        return view('livewire.customers.create');
+        return view('livewire.customers.update');
     }
 
-    #[On('customer::creating')]
-    public function openModal(): void
+    #[On('customer::updating')]
+    public function loadCustomer(int $customerId): void
     {
+        $customer = Customer::find($customerId);
+        $this->form->setCustomer($customer);
+
         $this->form->resetErrorBag();
         $this->modal = true;
     }
 
     public function save(): void
     {
-        $this->form->create();
+        $this->form->update();
 
-        $this->dispatch('customer::created');
+        $this->dispatch('customer::updated');
         $this->reset('modal');
-        $this->success('Customer created successfully.');
+        $this->success('Customer updated successfully.');
     }
 }

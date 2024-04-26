@@ -27,7 +27,7 @@ class Index extends Component
 
     public function filterPermissions(?string $value = null): void
     {
-        $selectedOption = Permission::where('id', $this->searchPermissions)->get();
+        $selectedOption = Permission::whereIn('id', $this->searchPermissions)->get();
 
         $this->permissionsToSearch = Permission::query()
             ->when($value, function (Builder $query) use ($value) {
