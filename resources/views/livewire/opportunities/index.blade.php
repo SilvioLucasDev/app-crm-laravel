@@ -49,6 +49,19 @@
             <x-table.th :$header name="amount" />
         @endscope
 
+        @scope('cell_status', $item)
+            <x-badge :value="$item->status" @class([
+                'badge-outline badge-sm uppercase',
+                'badge-info' => $item->status == 'open',
+                'badge-success' => $item->status == 'won',
+                'badge-error' => $item->status == 'lost',
+            ]) />
+        @endscope
+
+        @scope('cell_amount', $item)
+            R$ {{ format_amount_to_show($item->amount) }}
+        @endscope
+
         @scope('actions', $opportunity)
             <div class="flex items-centes space-x-1">
                 @unless ($opportunity->trashed())

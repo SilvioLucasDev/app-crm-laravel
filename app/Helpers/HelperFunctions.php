@@ -26,3 +26,27 @@ if (!function_exists('obfuscate_email')) {
         return $maskedFirstPart . '@' . $maskedSecondPart;
     }
 }
+
+if (!function_exists('format_amount_to_save')) {
+    function format_amount_to_save(?string $amount = null): int
+    {
+        if ($amount === null) {
+            return 0;
+        }
+
+        $amount = floatval($amount);
+
+        return (int) ($amount * 100);
+    }
+}
+
+if (!function_exists('format_amount_to_show')) {
+    function format_amount_to_show(int $amount, $decimal = true): string
+    {
+        if ($decimal == true) {
+            return number_format($amount / 100, 2, ',', '.');
+        }
+
+        return (string) ($amount / 100);
+    }
+}

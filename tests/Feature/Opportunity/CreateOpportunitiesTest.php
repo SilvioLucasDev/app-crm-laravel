@@ -23,7 +23,7 @@ it('should be able to create a new opportunity in the system', function () {
         ->assertPropertyWired('form.title')
         ->set('form.status', 'won')
         ->assertPropertyWired('form.status')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '1.23')
         ->assertPropertyWired('form.amount')
         ->call('save')
         ->assertMethodWiredToForm('save')
@@ -32,7 +32,7 @@ it('should be able to create a new opportunity in the system', function () {
     assertDatabaseHas('opportunities', [
         'title'  => 'PHP',
         'status' => 'won',
-        'amount' => '100000',
+        'amount' => '123',
     ]);
 
     assertDatabaseCount('opportunities', 1);
@@ -57,7 +57,7 @@ test('after created we should dispatch an event to tell the list to reload', fun
     Livewire::test(Opportunities\Create::class)
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '10000.00')
         ->call('save')
         ->assertDispatched('opportunity::created');
 });
@@ -66,7 +66,7 @@ test('after created we should close the modal', function () {
     Livewire::test(Opportunities\Create::class)
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '10000.00')
         ->call('save')
         ->assertSet('modal', false);
 });

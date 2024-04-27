@@ -26,7 +26,7 @@ it('should be able to update a opportunity', function () {
         ->assertPropertyWired('form.title')
         ->set('form.status', 'won')
         ->assertPropertyWired('form.status')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '10.00')
         ->assertPropertyWired('form.amount')
         ->call('save')
         ->assertMethodWiredToForm('save')
@@ -36,7 +36,7 @@ it('should be able to update a opportunity', function () {
         'id'     => $this->opportunity->id,
         'title'  => 'PHP',
         'status' => 'won',
-        'amount' => '100000',
+        'amount' => '1000',
     ]);
 
     assertDatabaseCount('opportunities', 1);
@@ -63,7 +63,7 @@ test('after updated we should dispatch an event to tell the list to reload', fun
         ->call('loadOpportunity', $this->opportunity->id)
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '10.00')
         ->call('save')
         ->assertDispatched('opportunity::updated');
 });
@@ -73,7 +73,7 @@ test('after updated we should close the modal', function () {
         ->call('loadOpportunity', $this->opportunity->id)
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
-        ->set('form.amount', '100000')
+        ->set('form.amount', '10.00')
         ->call('save')
         ->assertSet('modal', false);
 });

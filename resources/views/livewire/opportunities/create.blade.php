@@ -5,7 +5,7 @@
                 <div class="space-y-2">
                     <x-input label="Title" wire:model="form.title" />
                     <x-select label="Status" wire:model="form.status" :options="$this->statusOptions" />
-                    <x-input label="Amount" wire:model="form.amount" suffix="R$" inline locale="pt-BR" />
+                    <x-input label="Amount" wire:model="form.amount" prefix="R$" inline locale="pt-BR" money />
                 </div>
 
                 <x-slot:actions>

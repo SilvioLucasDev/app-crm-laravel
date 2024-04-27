@@ -30,7 +30,7 @@ class Form extends BaseForm
 
         $this->title  = $opportunity->title;
         $this->status = $opportunity->status;
-        $this->amount = (string) $opportunity->amount;
+        $this->amount = format_amount_to_show($opportunity->amount, false);
     }
 
     public function create()
@@ -40,7 +40,7 @@ class Form extends BaseForm
         Opportunity::query()->create([
             'title'  => $this->title,
             'status' => $this->status,
-            'amount' => $this->amount,
+            'amount' => format_amount_to_save($this->amount),
         ]);
 
         $this->reset();
@@ -52,7 +52,7 @@ class Form extends BaseForm
 
         $this->opportunity->title  = $this->title;
         $this->opportunity->status = $this->status;
-        $this->opportunity->amount = $this->amount;
+        $this->opportunity->amount = format_amount_to_save($this->amount);
         $this->opportunity->update();
     }
 
