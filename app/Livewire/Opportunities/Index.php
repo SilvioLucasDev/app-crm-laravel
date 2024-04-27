@@ -66,16 +66,16 @@ class Index extends Component
 
     public function update(int $id): void
     {
-        $this->dispatch('opportunity::updating', customerId: $id)->to('opportunities.update');
+        $this->dispatch('opportunity::updating', opportunityId: $id)->to('opportunities.update');
     }
 
     public function archive(int $id): void
     {
-        $this->dispatch('opportunity::archiving', customerId: $id)->to('opportunities.archive');
+        $this->dispatch('opportunity::archiving', opportunityId: $id)->to('opportunities.archive');
     }
 
     public function restore(int $id): void
     {
-        $this->dispatch('opportunity::restoring', customerId: $id)->to('opportunities.restore');
+        $this->dispatch('opportunity::restoring', opportunityId: $id)->to('opportunities.restore');
     }
 }

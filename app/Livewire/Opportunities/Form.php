@@ -11,7 +11,7 @@ class Form extends BaseForm
 
     public string $title = '';
 
-    public string $status = '';
+    public string $status = 'open';
 
     public ?string $amount = null;
 

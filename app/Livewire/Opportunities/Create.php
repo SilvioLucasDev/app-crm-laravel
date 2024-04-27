@@ -24,9 +24,9 @@ class Create extends Component
     public function statusOptions(): array
     {
         return [
-            ['id' => 'open', 'name' => 'open'],
-            ['id' => 'won', 'name' => 'won'],
-            ['id' => 'lost', 'name' => 'lost'],
+            ['id' => 'open', 'name' => 'Open'],
+            ['id' => 'won', 'name' => 'Won'],
+            ['id' => 'lost', 'name' => 'Lost'],
         ];
     }
 

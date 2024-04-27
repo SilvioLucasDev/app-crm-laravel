@@ -51,10 +51,10 @@
 
         @scope('actions', $opportunity)
             <div class="flex items-centes space-x-1">
-                <x-button id="update-btn-{{ $opportunity->id }}" wire:key="update-btn-{{ $opportunity->id }}"
-                    icon="o-pencil" wire:click="update('{{ $opportunity->id }}')" spinner class="btn-sm btn-ghost" />
-
                 @unless ($opportunity->trashed())
+                    <x-button id="update-btn-{{ $opportunity->id }}" wire:key="update-btn-{{ $opportunity->id }}"
+                        icon="o-pencil" wire:click="update('{{ $opportunity->id }}')" spinner class="btn-sm btn-ghost" />
+
                     <x-button id="archive-btn-{{ $opportunity->id }}" wire:key="archive-btn-{{ $opportunity->id }}"
                         icon="o-trash" wire:click="archive('{{ $opportunity->id }}')" spinner class="btn-sm btn-ghost" />
                 @else
