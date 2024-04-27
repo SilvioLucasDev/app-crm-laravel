@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Traits\Factory\HasDeleted;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CustomerFactory extends Factory
 {
+    use HasDeleted;
+
     /**
      * Define the model's default state.
      *
@@ -38,12 +41,5 @@ class CustomerFactory extends Factory
             'company'  => $this->faker->company(),
             'position' => $this->faker->jobTitle(),
         ];
-    }
-
-    public function deleted(): static
-    {
-        return $this->state(fn () => [
-            'deleted_at' => now(),
-        ]);
     }
 }
