@@ -51,7 +51,7 @@
 
         @scope('cell_permissions', $user)
             @foreach ($user->permissions as $permission)
-                <x-badge :value="$permission->key" class="badge-info whitespace-nowrap" />
+                <x-badge :value="$permission->key" class="badge-info badge-outline badge-sm whitespace-nowrap uppercase" />
             @endforeach
         @endscope
 

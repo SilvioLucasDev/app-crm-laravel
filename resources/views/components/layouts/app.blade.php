@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? config('app.name') }}</title>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/robsontenorio/mary@0.44.2/libs/currency/currency.js">
+    </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -57,6 +60,7 @@
 
                 <x-menu-item title="Home" icon="o-home" :link="route('dashboard')" />
                 <x-menu-item title="Customers" icon="o-building-storefront" :link="route('customers')" />
+                <x-menu-item title="Opportunities" icon="o-currency-dollar" :link="route('opportunities')" />
 
                 @can(\App\Enums\Can::BE_AN_ADMIN->value)
                     <x-menu-sub title="Admin" icon="o-lock-closed">
