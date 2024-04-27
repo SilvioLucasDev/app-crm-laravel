@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Opportunities;
 
-use App\Models\Opportunity;
+use App\Models\{Customer, Opportunity};
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Form as BaseForm;
 
 class Form extends BaseForm
@@ -16,6 +17,8 @@ class Form extends BaseForm
     public ?string $amount = null;
 
     public ?int $customer_id = null;
+
+    public Collection|array $customers = [];
 
     protected $validationAttributes = [
         'customer_id' => 'customer',
@@ -39,6 +42,8 @@ class Form extends BaseForm
         $this->status      = $opportunity->status;
         $this->amount      = format_amount_to_show($opportunity->amount, false);
         $this->customer_id = $opportunity->customer_id;
+
+        $this->searchCustomers();
     }
 
     public function create()
@@ -66,4 +71,23 @@ class Form extends BaseForm
         $this->opportunity->update();
     }
 
+    public function searchCustomers(string $value = ''): void
+    {
+        $selectedOption = [];
+
+        if ($this->customer_id && filled($this->customer_id)) {
+            $selectedOption = Customer::query()
+            ->select('id', 'name')
+            ->whereId($this->customer_id)
+            ->get();
+        }
+
+        $this->customers = Customer::query()
+            ->where('name', 'like', "%$value%")
+            ->take(5)
+            ->orderBy('name')
+            ->get()
+            ->merge($selectedOption);
+        ;
+    }
 }

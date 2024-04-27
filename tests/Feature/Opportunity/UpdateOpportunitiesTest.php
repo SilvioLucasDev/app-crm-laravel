@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Opportunities;
-use App\Models\{Opportunity, User};
+use App\Models\{Customer, Opportunity, User};
 use Livewire\Livewire;
 
 use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
@@ -12,6 +12,7 @@ beforeEach(function () {
     actingAs($user);
 
     $this->opportunity = Opportunity::factory()->create();
+    $this->customer    = Customer::factory()->create();
 });
 
 it('renders successfully', function () {
@@ -28,8 +29,7 @@ it('should be able to update a opportunity', function () {
         ->assertPropertyWired('form.status')
         ->set('form.amount', '10.00')
         ->assertPropertyWired('form.amount')
-        ->set('form.customer_id', $this->opportunity->customer_id)
-        ->assertPropertyWired('form.customer_id')
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
@@ -39,7 +39,7 @@ it('should be able to update a opportunity', function () {
         'title'       => 'PHP',
         'status'      => 'won',
         'amount'      => '1000',
-        'customer_id' => $this->opportunity->customer_id,
+        'customer_id' => $this->customer->id,
     ]);
 
     assertDatabaseCount('opportunities', 1);
@@ -69,7 +69,7 @@ test('after updated we should dispatch an event to tell the list to reload', fun
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
         ->set('form.amount', '10.00')
-        ->set('form.customer_id', $this->opportunity->customer_id)
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertDispatched('opportunity::updated');
 });
@@ -80,7 +80,7 @@ test('after updated we should close the modal', function () {
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
         ->set('form.amount', '10.00')
-        ->set('form.customer_id', $this->opportunity->customer_id)
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertSet('modal', false);
 });

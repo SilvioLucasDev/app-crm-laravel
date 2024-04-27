@@ -34,6 +34,7 @@ class Create extends Component
     public function openModal(): void
     {
         $this->form->resetErrorBag();
+        $this->form->searchCustomers();
         $this->modal = true;
     }
 
@@ -44,5 +45,10 @@ class Create extends Component
         $this->dispatch('opportunity::created');
         $this->reset('modal');
         $this->success('Opportunity created successfully.');
+    }
+
+    public function search(string $value = ''): void
+    {
+        $this->form->searchCustomers($value);
     }
 }

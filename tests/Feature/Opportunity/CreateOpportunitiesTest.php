@@ -28,7 +28,6 @@ it('should be able to create a new opportunity in the system', function () {
         ->set('form.amount', '1.23')
         ->assertPropertyWired('form.amount')
         ->set('form.customer_id', $this->customer->id)
-        ->assertPropertyWired('form.customer_id')
         ->call('save')
         ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
