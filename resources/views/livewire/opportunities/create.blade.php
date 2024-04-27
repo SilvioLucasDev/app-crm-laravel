@@ -4,6 +4,7 @@
             <x-card title="Create Opportunity" separator>
                 <div class="space-y-2">
                     <x-input label="Title" wire:model="form.title" />
+                    <x-input label="Customer" wire:model="form.customer_id" />
                     <x-select label="Status" wire:model="form.status" :options="$this->statusOptions" />
                     <x-input label="Amount" wire:model="form.amount" prefix="R$" inline locale="pt-BR" money />
                 </div>

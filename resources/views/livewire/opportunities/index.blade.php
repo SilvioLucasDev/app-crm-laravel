@@ -59,7 +59,7 @@
         @endscope
 
         @scope('cell_amount', $item)
-            R$ {{ format_amount_to_show($item->amount) }}
+            <span class="whitespace-nowrap">R$ {{ format_amount_to_show($item->amount) }}</span>
         @endscope
 
         @scope('actions', $opportunity)
