@@ -1,0 +1,77 @@
+<?php
+
+use App\Livewire\Opportunities;
+use App\Models\{Opportunity, User};
+use Livewire\Livewire;
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
+
+beforeEach(function () {
+    /** @var User $user */
+    $user = User::factory()->create();
+    actingAs($user);
+});
+
+it('renders successfully', function () {
+    Livewire::test(Opportunities\Create::class)
+        ->assertStatus(200);
+});
+
+it('should be able to create a new opportunity in the system', function () {
+    Livewire::test(Opportunities\Create::class)
+        ->set('form.title', 'PHP')
+        ->assertPropertyWired('form.title')
+        ->set('form.status', 'won')
+        ->assertPropertyWired('form.status')
+        ->set('form.amount', '100000')
+        ->assertPropertyWired('form.amount')
+        ->call('save')
+        ->assertMethodWiredToForm('save')
+        ->assertHasNoErrors();
+
+    assertDatabaseHas('opportunities', [
+        'title'  => 'PHP',
+        'status' => 'won',
+        'amount' => '100000',
+    ]);
+
+    assertDatabaseCount('opportunities', 1);
+});
+
+it('validation rules', function ($f) {
+    $livewire = Livewire::test(Opportunities\Create::class)
+    ->set('form.' . $f->field, $f->value);
+
+    $livewire->call('save')
+        ->assertHasErrors([$f->field => $f->rule]);
+})->with([
+    'title::required'  => (object)['field' => 'title', 'value' => '', 'rule' => 'required'],
+    'title::min:3'     => (object)['field' => 'title', 'value' => str_repeat('*', 2), 'rule' => 'min'],
+    'title::max:100'   => (object)['field' => 'title', 'value' => str_repeat('*', 101), 'rule' => 'max'],
+    'status::required' => (object)['field' => 'status', 'value' => '', 'rule' => 'required'],
+    'status::in'       => (object)['field' => 'status', 'value' => 'wrong', 'rule' => 'in'],
+    'amount::required' => (object)['field' => 'amount', 'value' => '', 'rule' => 'required'],
+]);
+
+test('after created we should dispatch an event to tell the list to reload', function () {
+    Livewire::test(Opportunities\Create::class)
+        ->set('form.title', 'PHP')
+        ->set('form.status', 'won')
+        ->set('form.amount', '100000')
+        ->call('save')
+        ->assertDispatched('opportunity::created');
+});
+
+test('after created we should close the modal', function () {
+    Livewire::test(Opportunities\Create::class)
+        ->set('form.title', 'PHP')
+        ->set('form.status', 'won')
+        ->set('form.amount', '100000')
+        ->call('save')
+        ->assertSet('modal', false);
+});
+
+test('check if component is in the page', function () {
+    Livewire::test(Opportunities\Index::class)
+        ->assertContainsLivewireComponent('opportunities.create');
+});
