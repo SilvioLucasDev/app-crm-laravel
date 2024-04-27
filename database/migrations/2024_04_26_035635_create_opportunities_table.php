@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Customer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +16,7 @@ return new class () extends Migration {
             $table->string('title', 100);
             $table->string('status', 30)->default('open');
             $table->integer('amount')->nullable();
+            $table->foreignIdFor(Customer::class)->references('id')->on('customers');
             $table->timestamps();
             $table->softDeletes();
         });

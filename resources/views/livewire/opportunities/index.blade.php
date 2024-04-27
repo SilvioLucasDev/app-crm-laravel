@@ -11,8 +11,8 @@
             <div class="col-span-12 sm:col-span-10 xl:col-span-11 mb-4 sm:mb-0">
                 <div class="grid grid-cols-3 gap-4 justify-items-start place-items-end">
                     <div class="col-span-3 sm:col-span-1 w-full">
-                        <x-input label="Search by title" icon="o-magnifying-glass" placeholder="Search..."
-                            wire:model.live="search" />
+                        <x-input label="Search by title, customer and status" icon="o-magnifying-glass"
+                            placeholder="Search..." wire:model.live="search" />
                     </div>
                     <div class="col-span-3 sm:col-span-1">
                         <x-checkbox label="Archived" wire:model.live="searchTrash" class="checkbox-primary" right
@@ -41,6 +41,10 @@
             <x-table.th :$header name="title" />
         @endscope
 
+        @scope('header_customer_name', $header)
+            <x-table.th :$header name="customer_name" />
+        @endscope
+
         @scope('header_status', $header)
             <x-table.th :$header name="status" />
         @endscope
@@ -59,7 +63,7 @@
         @endscope
 
         @scope('cell_amount', $item)
-            R$ {{ format_amount_to_show($item->amount) }}
+            <div class="whitespace-nowrap text-right">R$ {{ format_amount_to_show($item->amount) }}</div>
         @endscope
 
         @scope('actions', $opportunity)

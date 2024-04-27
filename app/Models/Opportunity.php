@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Models\HasSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Opportunity extends Model
@@ -16,5 +17,11 @@ class Opportunity extends Model
         'title',
         'status',
         'amount',
+        'customer_id',
     ];
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

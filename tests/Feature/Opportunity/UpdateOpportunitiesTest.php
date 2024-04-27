@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Opportunities;
-use App\Models\{Opportunity, User};
+use App\Models\{Customer, Opportunity, User};
 use Livewire\Livewire;
 
 use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
@@ -12,6 +12,7 @@ beforeEach(function () {
     actingAs($user);
 
     $this->opportunity = Opportunity::factory()->create();
+    $this->customer    = Customer::factory()->create();
 });
 
 it('renders successfully', function () {
@@ -28,15 +29,17 @@ it('should be able to update a opportunity', function () {
         ->assertPropertyWired('form.status')
         ->set('form.amount', '10.00')
         ->assertPropertyWired('form.amount')
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertMethodWiredToForm('save')
         ->assertHasNoErrors();
 
     assertDatabaseHas('opportunities', [
-        'id'     => $this->opportunity->id,
-        'title'  => 'PHP',
-        'status' => 'won',
-        'amount' => '1000',
+        'id'          => $this->opportunity->id,
+        'title'       => 'PHP',
+        'status'      => 'won',
+        'amount'      => '1000',
+        'customer_id' => $this->customer->id,
     ]);
 
     assertDatabaseCount('opportunities', 1);
@@ -50,12 +53,14 @@ it('validation rules', function ($f) {
     $livewire->call('save')
         ->assertHasErrors([$f->field => $f->rule]);
 })->with([
-    'title::required'  => (object)['field' => 'title', 'value' => '', 'rule' => 'required'],
-    'title::min:3'     => (object)['field' => 'title', 'value' => str_repeat('*', 2), 'rule' => 'min'],
-    'title::max:100'   => (object)['field' => 'title', 'value' => str_repeat('*', 101), 'rule' => 'max'],
-    'status::required' => (object)['field' => 'status', 'value' => '', 'rule' => 'required'],
-    'status::in'       => (object)['field' => 'status', 'value' => 'wrong', 'rule' => 'in'],
-    'amount::required' => (object)['field' => 'amount', 'value' => '', 'rule' => 'required'],
+    'title::required'       => (object)['field' => 'title', 'value' => '', 'rule' => 'required'],
+    'title::min:3'          => (object)['field' => 'title', 'value' => str_repeat('*', 2), 'rule' => 'min'],
+    'title::max:100'        => (object)['field' => 'title', 'value' => str_repeat('*', 101), 'rule' => 'max'],
+    'status::required'      => (object)['field' => 'status', 'value' => '', 'rule' => 'required'],
+    'status::in'            => (object)['field' => 'status', 'value' => 'wrong', 'rule' => 'in'],
+    'amount::required'      => (object)['field' => 'amount', 'value' => '', 'rule' => 'required'],
+    'customer_id::required' => (object)['field' => 'customer_id', 'value' => '', 'rule' => 'required'],
+    'customer_id::exists'   => (object)['field' => 'customer_id', 'value' => 1234, 'rule' => 'exists'],
 ]);
 
 test('after updated we should dispatch an event to tell the list to reload', function () {
@@ -64,6 +69,7 @@ test('after updated we should dispatch an event to tell the list to reload', fun
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
         ->set('form.amount', '10.00')
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertDispatched('opportunity::updated');
 });
@@ -74,6 +80,7 @@ test('after updated we should close the modal', function () {
         ->set('form.title', 'PHP')
         ->set('form.status', 'won')
         ->set('form.amount', '10.00')
+        ->set('form.customer_id', $this->customer->id)
         ->call('save')
         ->assertSet('modal', false);
 });

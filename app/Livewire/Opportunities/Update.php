@@ -49,4 +49,9 @@ class Update extends Component
         $this->reset('modal');
         $this->success('Opportunity updated successfully.');
     }
+
+    public function search(string $value = ''): void
+    {
+        $this->form->searchCustomers($value);
+    }
 }
