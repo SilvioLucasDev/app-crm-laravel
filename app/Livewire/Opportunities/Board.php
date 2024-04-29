@@ -29,4 +29,9 @@ class Board extends Component
             ->get()
             ->groupBy('status');
     }
+
+    public function updateOpportunities($data)
+    {
+
+    }
 }
