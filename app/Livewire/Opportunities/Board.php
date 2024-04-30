@@ -5,6 +5,7 @@ namespace App\Livewire\Opportunities;
 use App\Models\Opportunity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -22,31 +23,72 @@ class Board extends Component
         return Opportunity::query()
             ->orderByRaw("field(status, 'open', 'won', 'lost')")
             ->orderBy('sort_order')
-            ->get()
-            ->groupBy('status');
+            ->get();
     }
 
-    public function updateOpportunities($data)
+    #[Computed]
+    public function opens(): Collection
     {
-        $order = collect();
+        /** @phpstan-ignore-next-line */
+        return $this->opportunities->where('status', '=', 'open');
+    }
 
-        foreach ($data as $group) {
-            $items = collect($group['items'])
-                ->map(fn ($item) => $item['value'])
-                ->join(',');
+    #[Computed]
+    public function wons(): Collection
+    {
+        /** @phpstan-ignore-next-line */
+        return $this->opportunities->where('status', '=', 'won');
+    }
 
-            $order->push($items);
+    #[Computed]
+    public function losts(): Collection
+    {
+        /** @phpstan-ignore-next-line */
+        return $this->opportunities->where('status', '=', 'lost');
+    }
+
+    public function updateOpportunities(array $data): void
+    {
+        $order = $this->getItemsInOrder($data);
+        $this->updateStatuses($order);
+        $this->updateSortOrders($order);
+    }
+
+    private function getItemsInOrder(array $data): SupportCollection
+    {
+        return collect($data)->map(function ($group) {
+            return collect($group['items'])->pluck('value')->join(',');
+        });
+    }
+
+    private function updateStatuses(SupportCollection $collection): void
+    {
+        foreach (['open', 'won', 'lost'] as $status) {
+            $this->updateStatus($status, $collection);
         }
+    }
 
-        $open = explode(',', $order[0]);
-        $won  = explode(',', $order[1]);
-        $lost = explode(',', $order[2]);
+    private function updateStatus(string $status, SupportCollection $collection): void
+    {
+        $id = match ($status) {
+            'open'  => 0,
+            'won'   => 1,
+            'lost'  => 2,
+            default => null
+        };
 
-        $sortOrder = $order->join(',');
+        $list = $collection[$id];
+        $ids  = explode(',', $list);
 
-        Opportunity::query()->whereIn('id', $open)->update(['status' => 'open']);
-        Opportunity::query()->whereIn('id', $won)->update(['status' => 'won']);
-        Opportunity::query()->whereIn('id', $lost)->update(['status' => 'lost']);
+        if (filled($list)) {
+            Opportunity::query()->whereIn('id', $ids)->update(['status' => $status]);
+        }
+    }
+
+    private function updateSortOrders(SupportCollection $collection): void
+    {
+        $sortOrder = $collection->filter(fn ($item) => filled($item))->join(',');
+
         Opportunity::query()->update(['sort_order' => DB::raw("field(id, $sortOrder)")]);
     }
 }
