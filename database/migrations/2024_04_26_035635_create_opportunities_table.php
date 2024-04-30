@@ -14,8 +14,9 @@ return new class () extends Migration {
         Schema::create('opportunities', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
-            $table->string('status', 30)->default('open');
+            $table->string('status', 30)->default('open')->index();
             $table->integer('amount')->nullable();
+            $table->unsignedSmallInteger('sort_order')->default(0);
             $table->foreignIdFor(Customer::class)->references('id')->on('customers');
             $table->timestamps();
             $table->softDeletes();

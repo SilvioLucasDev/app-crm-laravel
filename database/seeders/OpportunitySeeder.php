@@ -12,7 +12,7 @@ class OpportunitySeeder extends Seeder
      */
     public function run(): void
     {
-        Opportunity::factory(50)->create();
-        Opportunity::factory(10)->deleted()->create();
+        Opportunity::factory(15)->create();
+        Opportunity::factory(2)->deleted()->create();
     }
 }
