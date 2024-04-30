@@ -17,6 +17,7 @@ class Opportunity extends Model
         'title',
         'status',
         'amount',
+        'sort_order',
         'customer_id',
     ];
 
