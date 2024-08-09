@@ -35,7 +35,7 @@ Route::middleware('auth', 'email.verified')->group(function () {
      * Customers Routes
      */
     Route::get('/customers', Customers\Index::class)->name('customers');
-    Route::get('/customers/{customer}', fn () => 'oi')->name('customers.show');
+    Route::get('/customers/{customer}', Customers\Show::class)->name('customers.show');
 
     /**
      * Opportunities Routes
