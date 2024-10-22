@@ -48,6 +48,9 @@
         @scope('actions', $customer)
             <div class="flex items-centes space-x-1">
                 @unless ($customer->trashed())
+                    <x-button id="show-btn-{{ $customer->id }}" wire:key="show-btn-{{ $customer->id }}" icon="o-eye"
+                        link="{{ route('customers.show', $customer) }}" class="btn-sm btn-ghost" />
+
                     <x-button id="update-btn-{{ $customer->id }}" wire:key="update-btn-{{ $customer->id }}" icon="o-pencil"
                         wire:click="update('{{ $customer->id }}')" spinner class="btn-sm btn-ghost" />
 
