@@ -1,7 +1,7 @@
 <div>
     <x-header title="Customer Profile" separator class="mb-4" />
 
-    <div class="grid grid-cols-3 space-x-2">
+    <div class="grid grid-cols-3 space-x-2 gap-4">
         <x-card class="bg-base-200">
             <div class="text-base space-y-4">
                 <div class="space-y-1">
@@ -44,6 +44,26 @@
             </div>
         </x-card>
 
-        <x-card class="bg-green-500 col-span-2"></x-card>
+        <div class="bg-base-200 col-span-2 rounded-md">
+            <div class="bg-base-100 rounded-t-md p-2 space-x-4">
+                <x-ui.tab href="{{ route('customers.show', [$customer, 'opportunities']) }}">
+                    Opportunities
+                </x-ui.tab>
+
+                <x-ui.tab href="{{ route('customers.show', [$customer, 'tasks']) }}">
+                    Tasks
+                </x-ui.tab>
+
+                <x-ui.tab href="{{ route('customers.show', [$customer, 'notes']) }}">
+                    Notes
+                </x-ui.tab>
+            </div>
+
+            <x-card class="bg-base-200">
+                <div>
+                    @livewire("customers.$tab.index", ['customer' => $customer])
+                </div>
+            </x-card>
+        </div>
     </div>
 </div>
