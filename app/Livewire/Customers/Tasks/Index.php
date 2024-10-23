@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Customers\Tasks;
 
-use App\Models\Customer;
+use App\Actions\DataSort;
+use App\Models\{Customer, Task};
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, On};
@@ -21,12 +22,17 @@ class Index extends Component
     #[Computed]
     public function notDoneTasks(): Collection
     {
-        return $this->customer->tasks()->with('assignedTo')->notDone()->get();
+        return $this->customer->tasks()->with('assignedTo')->notDone()->orderBy('sort_order')->get();
     }
 
     #[Computed]
     public function doneTasks(): Collection
     {
-        return $this->customer->tasks()->with('assignedTo')->done()->get();
+        return $this->customer->tasks()->with('assignedTo')->done()->orderBy('sort_order')->get();
+    }
+
+    public function updateTaskOrder($tasks): void
+    {
+        (new DataSort('tasks', $tasks, 'value'))->run();
     }
 }

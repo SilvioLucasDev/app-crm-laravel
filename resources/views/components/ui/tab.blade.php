@@ -10,6 +10,6 @@
     'text-gray-200 bg-base-200' => $tab === $requestTab,
     'border-transparent' => $tab !== $requestTab,
 ]) }}
-    href="{{ $href }}" :wire:navigate.hover>
+    href="{{ $href }}" wire:navigate.hover>
     {{ $slot }}
 </a>

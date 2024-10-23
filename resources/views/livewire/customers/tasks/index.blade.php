@@ -7,9 +7,13 @@
         Pending [{{ $this->notDoneTasks->count() }}]
     </h2>
 
-    <ul class="flex flex-col gap-2">
+    <ul class="flex flex-col gap-2" wire:sortable="updateTaskOrder" wire:sortable.options="{ animation: 100 }">
         @foreach ($this->notDoneTasks as $task)
-            <li>
+            <li wire:sortable.item="{{ $task->id }}" wire:key="task-{{ $task->id }}">
+                <button wire:sortable.handle title="Drand and reorder" class="cursor-grap">
+                    <x-icon name="o-bars-3" class="w-4 h-4 -mt-1 opacity-30" />
+                </button>
+
                 <input id="task-{{ $task->id }}" type="checkbox" value="1"
                     @if ($task->done_at) checked @endif />
 
