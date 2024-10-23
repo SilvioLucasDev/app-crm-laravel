@@ -35,4 +35,9 @@ class Index extends Component
     {
         (new DataSort('tasks', $tasks, 'value'))->run();
     }
+
+    public function toggleCheck(Task $task, string $status): void
+    {
+        $status === 'done' ? $task->update(['done_at' => now()]) : $task->update(['done_at' => null]);
+    }
 }
