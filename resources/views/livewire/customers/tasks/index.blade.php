@@ -24,16 +24,18 @@
     <ul class="flex flex-col gap-2">
         @foreach ($this->doneTasks as $task)
             <li class="flex items-start gap-2 justify-between">
-                <div class="flex gap-2">
+                <div class="flex gap-2 items-center">
                     <input id="task-{{ $task->id }}" type="checkbox" value="1" wire:click="toggleCheck({{ $task }}, 'pending' )" @if ($task->done_at) checked @endif />
 
                     <label for="task-{{ $task->id }}">
                         {{ $task->title }}
                     </label>
 
-                    <div>
-                        Assigned to: {{ $task->assignedTo?->name }}
-                    </div>
+                    @if ($task->assignedTo)
+                        <div class="text-xs italic opacity-30">
+                            Assigned to: {{ $task->assignedTo->name }}
+                        </div>
+                    @endif
                 </div>
                 <button title="Delete task" wire:click="deleteTask({{ $task }})">
                     <x-icon name="o-trash" class="w-4 h-4 -mt-1 opacity-30 hover:opacity-100 hover:text-error" />
