@@ -3,6 +3,7 @@
 namespace App\Livewire\Customers;
 
 use App\Models\Customer;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Show extends Component
@@ -16,7 +17,7 @@ class Show extends Component
         abort_unless(in_array($this->tab, ['notes', 'tasks', 'opportunities']), 404);
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.customers.show');
     }
