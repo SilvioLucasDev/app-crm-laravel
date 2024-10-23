@@ -1,4 +1,8 @@
 <div>
+    <livewire:customers.tasks.create :$customer />
+
+    <hr class="border-dashed border-gray-700 my-4">
+
     <h2 class="uppercase font-bold text-gray-600 text-xs mb-2">
         Pending [{{ $this->notDoneTasks->count() }}]
     </h2>
