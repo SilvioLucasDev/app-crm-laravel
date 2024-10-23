@@ -15,6 +15,7 @@
                 </button>
 
                 <input id="task-{{ $task->id }}" type="checkbox" value="1"
+                    wire:click="toggleCheck({{ $task }}, 'done')"
                     @if ($task->done_at) checked @endif />
 
                 <label for="task-{{ $task->id }}">
@@ -38,6 +39,7 @@
         @foreach ($this->doneTasks as $task)
             <li class="flex gap-2">
                 <input id="task-{{ $task->id }}" type="checkbox" value="1"
+                    wire:click="toggleCheck({{ $task }}, 'pending' )"
                     @if ($task->done_at) checked @endif />
 
                 <label for="task-{{ $task->id }}">
