@@ -31,7 +31,7 @@ class Create extends Component
         ]);
 
         $this->task = null;
-        $this->dispatch('task::created');
+        $this->dispatch('task::creating');
         $this->success('Task created successfully.');
         $this->reset('task');
     }
