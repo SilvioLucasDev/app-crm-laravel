@@ -34,7 +34,7 @@ class Form extends BaseForm
         $this->phone = $customer->phone;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
