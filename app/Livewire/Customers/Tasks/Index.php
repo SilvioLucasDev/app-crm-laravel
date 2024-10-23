@@ -40,4 +40,9 @@ class Index extends Component
     {
         $status === 'done' ? $task->update(['done_at' => now()]) : $task->update(['done_at' => null]);
     }
+
+    public function deleteTask(Task $task): void
+    {
+        $task->delete();
+    }
 }
