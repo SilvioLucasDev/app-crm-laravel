@@ -12,7 +12,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        Customer::all()->each(function (Customer $customer): void {
+        Customer::where('id', '<', 10)->each(function (Customer $customer): void {
             Task::factory(rand(4, 10))->create(['customer_id' => $customer->id]);
         });
     }
