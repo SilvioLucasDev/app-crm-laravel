@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Customers\Tasks;
 
-use App\Models\Customer;
+use App\Models\{Customer, Task};
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\{Computed, On};
 use Livewire\Component;
 
@@ -21,12 +22,19 @@ class Index extends Component
     #[Computed]
     public function notDoneTasks(): Collection
     {
-        return $this->customer->tasks()->with('assignedTo')->notDone()->get();
+        return $this->customer->tasks()->with('assignedTo')->notDone()->orderBy('sort_order')->get();
     }
 
     #[Computed]
     public function doneTasks(): Collection
     {
-        return $this->customer->tasks()->with('assignedTo')->done()->get();
+        return $this->customer->tasks()->with('assignedTo')->done()->orderBy('sort_order')->get();
+    }
+
+    public function updateTaskOrder($tasks): void
+    {
+        $sortOrder = collect($tasks)->pluck('value')->join(',');
+
+        Task::query()->update(['sort_order' => DB::raw("field(id, $sortOrder)")]);
     }
 }
